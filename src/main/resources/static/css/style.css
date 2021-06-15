@@ -1,0 +1,50 @@
+body{
+    background-color: rgb(197, 255, 255);
+}
+h1{
+    text-align: center;
+}
+.mainContent{
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;   
+}
+.accountSelector{
+    width: 30vw;
+    margin: 10px;
+}
+.clientTable{
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    padding: 2vw;
+    text-align: center;
+    border: 2px solid blue;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 2px blueviolet;
+}
+.clientTable table{
+    border: 2px solid black;
+}
+td :nth-last-child(1){
+    font-size: 10px;
+}
+td>button{
+    background-color: cyan;
+    color: blue;
+    font-weight: bold;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.accountSelector form input, button{
+    margin-top: 1vh;
+}

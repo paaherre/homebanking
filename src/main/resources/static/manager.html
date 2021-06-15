@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Bank</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!-- VueJS -->
+    <script src="https://unpkg.com/vue@next"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <h1>JAVA Data Bank</h1>
+        <div class="mainContent">
+            <div class="accountSelector">
+                <h2>Buscar cuentas por Mail:</h2>
+                <form class="form-floating mb-3" @submit.prevent="showData = !showData" @reset="showData = !showData">
+                    <input v-model="email" type="email" class="form-control" id="floatingInput"
+                        placeholder="name@example.com" required>
+                    <label for="floatingInput">ejemplo@correo.com</label>
+                    <button v-if="!showData" type="submit" id="submit" class="btn btn-success">Mostrar</button>
+                    <button v-else type="reset" id="reset" class="btn btn-success">Ocultar</button>
+                </form>
+            </div>
+            <div class="clientTable">
+                <h2>Clients Data:</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mails ejemplos</th>
+                            <th>Cuentas disponibles</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="client in clients">
+                        <tr>
+                            <td>{{client.email}}</td>
+                            <td>{{client.accounts.length}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="accountDisplay">
+
+        </div>
+        <!-- <pre><code>{{restResponse}}</code></pre> -->
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+
+    <!-- Local JS -->
+    <script src="./js/manager.js"></script>
+
+    <!-- Mount APP -->
+    <script>
+        app.mount('#app')
+    </script>
+
+</body>
+
+</html>
