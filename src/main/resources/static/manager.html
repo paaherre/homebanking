@@ -11,6 +11,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+
     <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
@@ -24,41 +28,67 @@
 
 <body>
     <div id="app">
-        <h1>JAVA Data Bank</h1>
+        <header class="d-flex justify-content-between">
+            <img src="./img/logo-bank.png" class="mx-5" alt="">
+            <h1>JD HomeBanking</h1>
+            <div class="mx-5 align-self-center">
+                <a href="./manager.html">Home</a>
+                <a href="./accounts.html">Accounts</a>
+            </div>
+        </header>
         <div class="mainContent">
-            <div class="accountSelector">
-                <h2>Buscar cuentas por Mail:</h2>
-                <form class="form-floating mb-3" @submit.prevent="showData = !showData" @reset="showData = !showData">
-                    <input v-model="email" type="email" class="form-control" id="floatingInput"
-                        placeholder="name@example.com" required>
-                    <label for="floatingInput">ejemplo@correo.com</label>
-                    <button v-if="!showData" type="submit" id="submit" class="btn btn-success">Mostrar</button>
-                    <button v-else type="reset" id="reset" class="btn btn-success">Ocultar</button>
+            <div class="dataPost">
+                <h2>Alta de Clientes</h2>
+                <form class="Prueba" action="" @submit.prevent="dataPost">
+                    <div class="form-floating mb-3">
+                        <input v-model="postFirstName" type="text" class="form-control" id="floatingFname"
+                            placeholder="name@example.com" required>
+                        <label for="floatingFname">First Name:</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input v-model="postLastName" type="text" name="lname" class="form-control" id="floatingLname"
+                            placeholder="name@example.com" required>
+                        <label for="floatingLname">Last Name:</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input v-model="postEmail" type="mail" name="email" class="form-control" id="floatingMail"
+                            placeholder="name@example.com" required>
+                        <label for="floatingMail">Email:</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input v-model="postPassword" type="password" name="password" class="form-control"
+                            id="floatingPostPassword" placeholder="name@example.com" required>
+                        <label for="floatingPostPassword">Conteseña:</label>
+                    </div>
+                    <button type="submit" name="submit" id="submit" class="btn btn-success" disabled>Confirmar
+                        Datos</button>
                 </form>
             </div>
             <div class="clientTable">
-                <h2>Clients Data:</h2>
+                <h2>Clientes de Prueba:</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>Mails ejemplos</th>
-                            <th>Cuentas disponibles</th>
+                            <th>Mail:</th>
+                            <th>Contraseña:</th>
+                            <th>Cuentas:</th>
                         </tr>
                     </thead>
                     <tbody v-for="client in clients">
                         <tr>
                             <td>{{client.email}}</td>
+                            <td>{{client.password}}</td>
                             <td>{{client.accounts.length}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="accountDisplay">
+
 
         </div>
-        <!-- <pre><code>{{restResponse}}</code></pre> -->
+        <pre><code>{{restResponse}}</code></pre>
     </div>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
@@ -72,6 +102,9 @@
     <script>
         app.mount('#app')
     </script>
+
+    <!-- Sweet Alert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 </body>
 

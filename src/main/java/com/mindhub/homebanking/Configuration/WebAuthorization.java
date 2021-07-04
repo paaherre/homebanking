@@ -1,5 +1,6 @@
 package com.mindhub.homebanking.Configuration;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,16 +18,21 @@ class WebAuthorization extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/admin/**").hasAuthority("ADMIN")
-                .antMatchers("/rest/**").hasAuthority("ADMIN")
-                .antMatchers("/h2-console").hasAuthority("ADMIN")
-                .antMatchers("/index.html").permitAll()
-                .antMatchers("/api/login").permitAll()
+                .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                //.antMatchers("/rest/**").hasAnyAuthority("ADMIN")
+                //.antMatchers("/h2-console").hasAnyAuthority("ADMIN")
+                .antMatchers("/index.html", "/js/**", "/css/**", "/img/**").permitAll()
+                .antMatchers("/api/headers").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/clients").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/transfer").hasAuthority("USER")
+                .antMatchers(HttpMethod.GET, "/api/clients/current").hasAnyAuthority("USER")
+                .antMatchers(HttpMethod.GET, "/api/**").denyAll()
                 .antMatchers("/**").hasAuthority("USER");
+                //.antMatchers("/**").hasAnyAuthority("ADMIN");
 
         http.formLogin()
-                .usernameParameter("name")
-                .passwordParameter("pwd")
+                .usernameParameter("email")
+                .passwordParameter("password")
                 .loginPage("/api/login");
 
         http.logout().logoutUrl("/api/logout");

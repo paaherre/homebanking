@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Bank</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!-- VueJS -->
+    <script src="https://unpkg.com/vue@next"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <header class="d-flex justify-content-between">
+            <img src="./img/logo-bank.png" class="mx-5" alt="">
+            <h1>JD HomeBanking</h1>
+            <div class="mx-5 align-self-center">
+                <a href="./index.html">Home</a>
+                <a href="./accounts.html">Accounts</a>
+                <a href="./cards.html">Cards</a>
+                <a href="#" @click="logout">LogOut</a>
+            </div>
+        </header>
+        <div class="mainContent">
+            <a :href="'./cards.html?id='+ client.id"><button class="btn btn-success"> Ver Tarjetas</button></a>
+            <div class="accountDisplay d-flex flex-row m-3 gap-5">
+                <div v-for="account in client.accounts">
+                    <transition name="fade">
+                        <div class="card" style="width: 18rem;">
+                            <a :href="'./account.html?id='+ account.id">
+                                <div class="card-body cardStyle">
+                                    <h5 class="card-title">Cuenta: {{account.number}}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Titular: {{client.firstName +
+                                        " "
+                                        +client.lastName}}</h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">email: {{client.email}}</h6>
+                                    <hr>
+                                    <p class="text-muted">Saldo:</p>
+                                    <h2 class="card-title text-center mb-3">{{account.balance}}</h2>
+                                    <h6 class="card-subtitle mb-2 text-muted">Alta:
+                                        {{formatDate(account.creationDate)}}
+                                    </h6>
+                                </div>
+                            </a>
+                        </div>
+                    </transition>
+                </div>
+                <button v-if="accounts < 3" class="btn btn-success" @click="crearCuenta">Agregar
+                    cuenta</button>
+            </div>
+            <div class="loansDisplay d-flex flex-row m-3 gap-5">
+                <transition name="fade">
+                    <div v-if="showData">
+                        <div v-if="loans" class="loansTable">
+                            <h4>Prestamos acreditados:</h4>
+                            <table class="table table-primary table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Registro</th>
+                                        <th>Tipo de Préstamo</th>
+                                        <th>Monto</th>
+                                        <th>Cuotas</th>
+                                    </tr>
+                                </thead>
+                                <tbody v-for="l in client.loans">
+                                    <tr>
+                                        <td>{{l.id}}</td>
+                                        <td>{{l.loanName}}</td>
+                                        <td>{{l.payments}}</td>
+                                        <td>{{l.amount}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div v-else>
+                            <h5>Solicite su préstamo Pre-Aprobado aquí!!</h5>
+                        </div>
+                    </div>
+                </transition>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+
+    <!-- Local JS -->
+    <script src="./js/accounts.js"></script>
+
+    <!-- Mount APP -->
+    <script>
+        app.mount('#app')
+    </script>
+
+    <!-- Sweet Alert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+</body>
+
+</html>
