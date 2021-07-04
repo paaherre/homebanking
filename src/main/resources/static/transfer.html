@@ -87,24 +87,30 @@
                         <label for="transferAmount">Ingrese Monto: </label>
                     </div>
                     <div class="d-flex flex-column m-5">
-                        <select class="my-1" name="reciever" id="reciever" :v-model="isOwner">
+                        <select class="my-1" name="reciever" id="reciever" v-model="isOwner">
+                            <option value="none" selected>Cuenta Destino</option>
                             <option :value="true">Propia</option>
                             <option :value="false">De tercero</option>
                         </select>
-                        <select class="my-1" name="fromAccount" id="fromAccount" :v-model="fromAccount">
+                        <select class="my-1" name="fromAccount" id="fromAccount" v-model="fromAccount">
                             <option v-for="acc in client.accounts" :value="acc.number" :disabled="disabledFromAcc(acc)">
                                 {{acc.number}}</option>
                         </select>
-                        <select v-show="isOwner == true" class="my-1" name="toAccount" :v-model="toAccount">
-                            <option v-for="acc in client.accounts" :value="acc.number" :disabled="disabledToAcc(acc)">
+                        <select v-show="isOwner == true" class="my-1" name="toAccount" v-model="toAccount">
+                            <option v-for="acc in availableAcc()" :value="acc.number" :disabled="disabledToAcc(acc)">
                                 {{acc.number}}</option>
                         </select>
-                        <!--                         <div>
+                        <div v-show="isOwner == false" class="my-1">
+                            <input type="text" name="toAccount" maxlength="4" size="10" v-model="toAccount">
+                        </div>
+                        <div v-show="isOwner == 'none'" class="my-1">
+                            <input type="number" name="transferAmount" maxlength="4" size="10" v-model="transferAmount"
+                                placeholder="Seleccione Destinatario" disabled>
+                        </div>
+                        <div>
                             <input type="number" name="transferAmount" id="transferAmount" maxlength="4" size="10"
                                 v-model="transferAmount">
-                        </div> -->
-
-
+                        </div>
                     </div>
                 </div>
                 <button type="submit" id="submit">Tocame</button>

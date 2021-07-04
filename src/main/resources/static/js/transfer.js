@@ -2,7 +2,7 @@ const app = Vue.createApp({
     data() {
         return {
             client: [],
-            isOwner: "",
+            isOwner: "none",
             fromAccount: "",
             toAccount: "",
             transferAmount: "",
@@ -25,6 +25,7 @@ const app = Vue.createApp({
         },
         validar() {
             console.log(this.isOwner)
+            console.log(this.fromAccount)
         },
         disabledFromAcc(a) {
             if (a.number == this.toAccount) {
@@ -38,6 +39,11 @@ const app = Vue.createApp({
             }
             return false;
         },
+        availableAcc(a) {
+            if (!this.client.account)
+                this.client.accounts.filter(e => e.number != this.fromAccount)
+            return
+        }
     },
     computed: {
 
