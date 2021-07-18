@@ -10,7 +10,7 @@ const app = Vue.createApp({
     },
     methods: {
         createCards() {
-            axios.post('/api/cards', "type=" + this.cardType.toUpperCase() + "&color=" + this.cardColor.toUpperCase(), { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
+            axios.post('/api/cards/create', "type=" + this.cardType.toUpperCase() + "&color=" + this.cardColor.toUpperCase(), { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
                 .then(response => window.location.href = "/cards.html")
                 .catch(err => swal('No puede crear más tarjetas de este tipo'))
         },

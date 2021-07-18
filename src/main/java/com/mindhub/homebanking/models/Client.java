@@ -106,4 +106,18 @@ public class Client {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", clientLoans=" + clientLoans +
+                ", accounts=" + accounts +
+                ", cards=" + cards +
+                '}';
+    }
 }

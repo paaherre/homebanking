@@ -18,14 +18,20 @@ class WebAuthorization extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/api/payment").permitAll()
                 .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
                 //.antMatchers("/rest/**").hasAnyAuthority("ADMIN")
                 //.antMatchers("/h2-console").hasAnyAuthority("ADMIN")
                 .antMatchers("/index.html", "/js/**", "/css/**", "/img/**").permitAll()
                 .antMatchers("/api/headers").permitAll()
+                .antMatchers("/api/body").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/clients").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/api/cards/delete").hasAuthority("USER")
                 .antMatchers(HttpMethod.POST, "/api/transfer").hasAuthority("USER")
+                .antMatchers(HttpMethod.POST, "/api/loans").hasAuthority("USER")
+                .antMatchers(HttpMethod.GET, "/api/loans").hasAuthority("USER")
                 .antMatchers(HttpMethod.GET, "/api/clients/current").hasAnyAuthority("USER")
+                .antMatchers(HttpMethod.POST, "/api/transactions").hasAuthority("USER")
                 .antMatchers(HttpMethod.GET, "/api/**").denyAll()
                 .antMatchers("/**").hasAuthority("USER");
                 //.antMatchers("/**").hasAnyAuthority("ADMIN");

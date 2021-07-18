@@ -36,6 +36,7 @@
                 <a href="./index.html">Home</a>
                 <a href="./accounts.html">Accounts</a>
                 <a href="./cards.html">Cards</a>
+                <a href="./transfer.html">Transfers</a>
                 <a href="#" @click="logout">LogOut</a>
             </div>
         </header>
@@ -57,7 +58,8 @@
                         </div>
                         <div class="card__space-25">
                             <span class="card__label">Expires</span>
-                            <p class="card__info">{{expires(d.truDate)}}</p>
+                            <p class="card__info" :class="expiredCard(d.truDate) ? 'expiredCard' : ''">
+                                {{expires(d.truDate)}}</p>
                         </div>
                     </div>
 
@@ -67,6 +69,10 @@
                             <div class="card__secret">
                                 <p class="card__secret--last">{{d.cvv}}</p>
                             </div>
+                            <button type="button" class="card__back-square card__square btn-danger"
+                                data-bs-toggle="modal" data-bs-target="#deleteCardModal" @click="deleteCard(d)">
+                                Eliminar
+                            </button>
                             <!-- <img class="card__back-square card__square"
                                 src="https://image.ibb.co/cZeFjx/little_square.png">-->
                             <img class="card__back-logo card__logo" src="./img/banelco.png">
@@ -92,7 +98,8 @@
                         </div>
                         <div class="card__space-25">
                             <span class="card__label">Expires</span>
-                            <p class="card__info">{{expires(d.truDate)}}</p>
+                            <p class="card__info" :class="expiredCard(d.truDate) ? 'expiredCard' : ''">
+                                {{expires(d.truDate)}}</p>
                         </div>
                     </div>
 
@@ -102,6 +109,10 @@
                             <div class="card__secret">
                                 <p class="card__secret--last">{{d.cvv}}</p>
                             </div>
+                            <button type="button" class="card__back-square card__square btn-danger"
+                                data-bs-toggle="modal" data-bs-target="#deleteCardModal" @click="deleteCard(d)">
+                                Eliminar
+                            </button>
                             <!-- <img class="card__back-square card__square"
                                 src="https://image.ibb.co/cZeFjx/little_square.png">-->
                             <img class="card__back-logo card__logo" src="./img/banelco.png">
@@ -111,6 +122,30 @@
                 </div>
                 <div v-else>
                     <h3>Solicitala aquí!</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- deleteCardModal -->
+        <div class="modal fade" id="deleteCardModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Elimar Tarjeta</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            @click="deleteCardCancel"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Está seguro que desea eliminar la tarjeta?</p>
+                        <p>Número: {{deleteCardNumber}}</p>
+                        <p>Esta acción no puede revertirse.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            @click="deleteCardCancel">Cancel</button>
+                        <button type="button" class="btn btn-danger" @click="deleteCardConfirm">Confirmar</button>
+                    </div>
                 </div>
             </div>
         </div>

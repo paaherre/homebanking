@@ -1,4 +1,5 @@
 package com.mindhub.homebanking.models;
+import com.mindhub.homebanking.utility.Utility;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class Account {
     private String number;
     private LocalDateTime creationDate;
     private Double balance;
+    private AccountType type;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="client_id")
@@ -26,11 +28,21 @@ public class Account {
 
     public Account() { }
 
-    public Account(String number, LocalDateTime creationDate, Double balance, Client client) {
+    public Account(String number, LocalDateTime creationDate, Double balance, Client client, AccountType type) {
         this.number = number;
         this.creationDate = creationDate;
         this.balance = balance;
         this.client = client;
+        this.type = type;
+    }
+
+
+    public AccountType getType() {
+        return type;
+    }
+
+    public void setType(AccountType type) {
+        this.type = type;
     }
 
     public Set<Transaction> getTransactions() {

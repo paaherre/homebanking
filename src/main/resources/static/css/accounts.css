@@ -1,0 +1,376 @@
+:root{
+    --color-gray: rgb(220, 234, 242);
+    --color-blue: rgb(8, 121, 166);
+    --color-orange: rgb(255, 73, 49);
+}
+body{
+    margin: 0;
+    padding: 0;
+    background-image: url('../img/bg-img-bank2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;    
+}
+.bg-cover{
+    
+    background-color: rgba(8, 121, 166, 0.45);
+    min-height: 100vh;
+}
+/* Welcome*/
+.welcome h2{
+    margin-top: 2rem;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-gray);
+    text-shadow: 2px 2px 2px rgba(8, 121, 166, 0.7);
+}
+
+ /* Accounts */
+ #accounts>h2{
+     font-size: 2rem;
+    font-weight: 800;
+    text-align: left;
+    color: var(--color-gray);
+    text-shadow: 2px 2px 2px rgba(8, 121, 166, 0.7);
+    margin-top: 5vh;
+    margin-left: 2vw;
+ }
+ .accountCards{    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+.card {
+    margin-top: 2rem;
+     width: 350px;
+     height: 400px;
+     background-color: rgba(220, 234, 242, 0.55);
+     backdrop-filter: blur(8px);
+     box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+     box-sizing: border-box;
+    
+ }
+ .card:hover{
+    box-shadow: none;
+}
+.card .cardContent {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color: var(--color-gray);
+    font-weight: 900;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0,0.38);
+    display: flex;
+    flex-direction: column;
+}
+.bg-hexagono{
+    background-image: url('../img/bg-hexagono.jpg');
+    background-size: cover;
+    background-position: center;
+}
+.cardContent .clientInfo{
+    padding: 1em 0;    
+    text-align: center;
+    background-color: rgba(8, 121, 166, 0.75);
+    color: var(--color-gray);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0,0.68);
+}
+.clientInfo .align-right{
+    text-align: end;
+}
+.clientInfo .accountData{
+    background-color: var(--color-gray);
+    margin-top: 0;
+}
+.clientInfo label{
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 1em;
+    
+}
+.clientInfo select,option{
+    border-radius: 5px;
+    font-weight: 600;
+    color:var(--color-blue);
+    background-color: rgba(220, 234, 242, 0.72);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0,0.68);
+}
+.clientInfo select:hover{
+    box-shadow: none;
+}
+.card .cardContent .accountInfo{  
+    padding: 2em 0;   
+    height: 280px;
+     display: flex;
+     flex-direction: column;   
+}
+.accountInfo h2{    
+    text-align: center;
+    font-size: 3em;
+    font-weight: bold;    
+}
+.accountInfo ul li{
+    font-size: 14px;
+    color: var(--color-blue);
+}
+.accountInfo h6{
+    text-align: end;
+}
+.accountInfo h4{
+    text-align: center;
+    font-weight:500;
+}
+.card .details {
+    position: absolute;
+    top: 0;
+    left: 0; 
+    width: 100%;/*100%;*/
+    height: 100%;
+    background: rgba(8, 121, 166, 0.7);
+    transition: .5s;
+    transform-origin: left;
+    transform: perspective(2000px) rotateY(-90deg);
+}
+.card:hover .details {
+    transform: perspective(2000px) rotateY(0deg);
+}
+.card .details .center {
+    padding: 10px;
+    text-align: center;
+    background: #fff;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.card .details .accountOps button{
+    font-size: 13px;
+}
+
+.card .details .center ul {
+    margin: 10px auto 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: #ff3636;
+    /*display: table;*/
+}
+.card .details .center ul li {
+    list-style: none;
+    margin: 0 5px;
+    float: left;
+}
+.card .details .center .opsAccess i {
+    
+    background: #262626;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    transform: .5s;
+}
+.card .details .center .opsAccess a{
+    text-decoration: none;
+    color: var(--color-blue);
+}
+.card .details .center .opsAccess a:hover i{
+    background: #ff3636;
+    color: white;
+}
+
+.opsAccess{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.accountInfo{
+    border-left: 1px solid rgba(8, 121, 166, 0.45);
+}
+.accountInfo ul{
+    text-align: left;
+}
+.accountInfo ul li{
+    padding: 5px 0 0 0;
+}
+.addAccount{
+    align-self: center;
+    margin-top: 2rem;
+    height: 12rem;
+    width: 12rem;
+    border-radius: 50%;
+    border: 5px solid rgba(255,255,255,0.1);
+    background: rgb(8,121,166);
+    background: -moz-radial-gradient(circle, rgba(8,121,166,1) 0%, rgba(255,255,255,0.6951155462184874) 100%);
+    background: -webkit-radial-gradient(circle, rgba(8,121,166,1) 0%, rgba(255,255,255,0.6951155462184874) 100%);
+    background: radial-gradient(circle, rgba(8,121,166,1) 0%, rgba(255,255,255,0.6951155462184874) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0879a6",endColorstr="#ffffff",GradientType=1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+}
+.addAccount span{        
+    font-size: 7rem;
+    color: rgb(255,255,255);
+}
+.addAccount:hover{
+    box-shadow: none;
+    cursor: pointer;
+}
+
+/* Loans Table */
+#loans>h2{
+    font-weight: 800;
+    text-align: left;
+    color: var(--color-gray);
+    text-shadow: 2px 2px 2px rgba(8, 121, 166, 0.7);
+    margin-top: 5vh;
+    margin-left: 2vw;
+    font-size: 2rem;
+ }
+
+
+.containerLoans {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+h2 {
+    font-size: 26px;
+    margin: 20px 0;
+    text-align: center;
+}
+h2 small {
+    font-size: 0.5em;
+}
+.responsive-table li {
+    border-radius: 3px;
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+.responsive-table .table-header {
+    background-color: rgba(8, 121, 166, 0.7);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--color-gray);
+    text-shadow: 2px 2px 2px rgba(0, 0, 0,0.38);
+    font-weight: bold;
+}
+.responsive-table .table-row {
+    background-color: rgba(255, 255, 255,0.5);
+    backdrop-filter: blur(8px);
+    box-shadow: 0px 0px 9px rgba(0, 0, 0, 0.1);
+    color: var(--color-blue);
+    text-shadow: 2px 2px 2px rgba(255, 255, 255,0.38);
+}
+.responsive-table .col-1 {
+    flex-basis: 25%;
+}
+.responsive-table .col-2 {
+    flex-basis: 25%;
+}
+.responsive-table .col-3 {
+    flex-basis: 25%;
+}
+.responsive-table .col-4 {
+    flex-basis: 25%;
+}
+.responsive-table .col-5 {
+    flex-basis: 100%;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Loans Modal*/
+.loansModal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100vw;
+    background-color: rgba(0,0,0, 0.43);
+}
+.modalContent{   
+    position: fixed;
+    min-height: 300px;
+    width: 330px;
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 20vh;
+    /*margin-left: 10px;*/
+    
+}
+.prueba{
+    min-width: 200px;
+    background-color: white;
+
+}
+
+footer{
+    min-height: 15vh;
+    background-color: rgba(8, 121, 166, 0.7);
+    color: var(--color-gray);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding: 1.5em 0;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0,0.38);
+}
+.siteMap.rsAccess {
+    display: flex;
+    justify-content: space-evenly;
+}
+footer a{
+    text-decoration: none;
+    color: var(--color-gray);
+}
+footer a:hover{
+    color: var(--color-gray);
+    text-shadow: 1px 1px 1px rgba(255, 255, 255,1);
+}
+footer ul li{
+    list-style-type: none;
+}
+footer .copy{
+    font-size: 12px;
+    margin: 0;
+    text-align: center;
+}
+
+/*Loans Table Query*/
+@media all and (max-width: 767px) {
+    .responsive-table .table-header {
+        display: none;
+   }
+    .responsive-table li {
+        display: block;
+   }
+    .responsive-table .col {
+        flex-basis: 100%;
+   }
+    .responsive-table .col {
+        display: flex;
+        padding: 10px 0;
+   }
+    .responsive-table .col:before {
+        color: var(--color-gray);
+        text-shadow: 2px 2px 2px rgba(0, 0, 0,0.38);
+        font-weight: bold;
+        padding-right: 10px;
+        content: attr(data-label);
+        flex-basis: 50%;
+        text-align: right;
+   }
+}

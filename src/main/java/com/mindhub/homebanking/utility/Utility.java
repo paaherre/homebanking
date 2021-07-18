@@ -5,8 +5,10 @@ import com.mindhub.homebanking.models.Transaction;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class Utility {
@@ -22,6 +24,13 @@ public class Utility {
             balance = balance + transaction.getAmount();
         }
         return balance;
+    }
+
+    public static List<LocalDate> getDatesBetween(
+            LocalDate startDate, LocalDate endDate) {
+
+        return startDate.datesUntil(endDate)
+                .collect(Collectors.toList());
     }
 
 }

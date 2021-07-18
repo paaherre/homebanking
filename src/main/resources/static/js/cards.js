@@ -4,6 +4,8 @@ const app = Vue.createApp({
             debit: [],
             credit: [],
             maxCards: "",
+            deleteCardId: "",
+            deleteCardNumber: "",
         }
     },
     created() {
@@ -25,11 +27,40 @@ const app = Vue.createApp({
         },
         logout() {
             axios.post('/api/logout')
-                .then(response => window.location.href = "/index.html")
+                .then(response => window.location.href = "./index.html")
         },
         prueba() {
             console.log(this.debit.length + this.credit.length)
+        },
+        deleteCard(card) {
+            this.deleteCardId = card.id
+            this.deleteCardNumber = card.number
+
+        },
+        deleteCardCancel() {
+            this.deleteCardId = ""
+            this.deleteCardNumber = ""
+        },
+        deleteCardConfirm() {
+            axios.delete('/api/cards/delete/' + this.deleteCardId)
+                .then(res => {
+                    swal(res.data)
+                    this.deleteCardCancel
+                    location.reload()
+                })
+                .catch(err => {
+                    swal(err)
+                    this.deleteCardCancel
+                    location.reload()
+                })
+        },
+        expiredCard(date) {
+            let dateNow = Date(Date.now())
+            let expirationDate = new Date(date).toDateString
+
+            return expirationDate < dateNow
         }
+
     },
 
 

@@ -1,18 +1,16 @@
 const app = Vue.createApp({
     data() {
         return {
-            account: [],
             transactions: [],
             a: 0,
         }
     },
     created() {
         const urlParams = new URLSearchParams(window.location.search);
-        const myParam = urlParams.get('id');
-        axios.get('/api/accounts/' + myParam)
+        const myParam = urlParams.get('number');
+        axios.get('/api/clients/current')
             .then(res => {
-                this.transactions = res.data.transactions
-                this.account = res.data
+                this.transactions = res.data.accounts.filter(e => e.number == myParam)[0].transactions.sort((a, b) => b.id - a.id)
             })
     },
     methods: {

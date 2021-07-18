@@ -1,6 +1,8 @@
 package com.mindhub.homebanking.controllers;
 
 
+import com.mindhub.homebanking.dtos.TransactionDTO;
+import com.mindhub.homebanking.dtos.TransactionFilterDTO;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.models.Transaction;
@@ -9,17 +11,20 @@ import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.repositories.TransactionRepository;
 import com.mindhub.homebanking.utility.Utility;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -83,9 +88,32 @@ public class TransactionController {
             return new ResponseEntity<>("que la cuenta de origen tenga el monto disponible", HttpStatus.FORBIDDEN);
         }
         // transacciones "DEBIT" y "CREDIT" para cta origen y cta destino
-        transactionRepository.save(new Transaction(-amount, LocalDateTime.now(), "Pago de Servicios", accountFrom, TransactionType.DEBITO));
-        transactionRepository.save(new Transaction(amount, LocalDateTime.now(), "Pago de Servicios", accountTo, TransactionType.CREDITO));
+        transactionRepository.save(new Transaction(-amount, LocalDateTime.now(), "Transferencia Realizada - " + description, accountFrom, TransactionType.DEBITO));
+        accountFrom.setBalance(accountFrom.getBalance() - amount);
+        accountRepository.save(accountFrom);
+        transactionRepository.save(new Transaction(amount, LocalDateTime.now(), "Transferencia Recibida - " + description, accountTo, TransactionType.CREDITO));
+        accountTo.setBalance(accountTo.getBalance() + amount);
+        accountRepository.save(accountTo);
+
         return new ResponseEntity<>("Se realizó la transferencia de manera exitosa", HttpStatus.ACCEPTED);
     }
 
+    @PostMapping ("/transactions")
+    public ResponseEntity <?> ListTransactionDTO(Authentication authentication, @RequestBody TransactionFilterDTO transactionFilterDTO){
+
+        transactionFilterDTO.setHastaFecha(LocalDate.now().plusDays(1));
+
+        Client client = clientRepository.findByEmail(authentication.getName());
+        Account account = accountRepository.findByNumber(transactionFilterDTO.getAccountNumber());
+
+        if (!client.getAccounts().contains(account)){
+            return new ResponseEntity<>("Datos incorrectos", HttpStatus.FORBIDDEN);
+        }
+
+        List<LocalDate> listOfDates = transactionFilterDTO.getDesdeFecha().datesUntil(transactionFilterDTO.getHastaFecha()).collect(Collectors.toList());
+        List<TransactionDTO> transactionDTOList = account.getTransactions().stream().map(TransactionDTO::new).collect(Collectors.toList());
+        List<TransactionDTO> transactionDTOList1 = transactionDTOList.stream().filter(e -> listOfDates.contains(e.getTransactionDate().toLocalDate())).collect(Collectors.toList());
+
+        return new ResponseEntity<>(transactionDTOList1, HttpStatus.ACCEPTED);
+    }
 }

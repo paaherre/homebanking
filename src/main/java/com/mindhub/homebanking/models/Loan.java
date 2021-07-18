@@ -21,6 +21,7 @@ public class Loan {
 
     private String name;
     private Integer maxAmount;
+    private double interest;
 
     @ElementCollection
     @Column(name="payments")
@@ -29,10 +30,19 @@ public class Loan {
     @OneToMany(mappedBy="loan", fetch=FetchType.EAGER)
     private Set<ClientLoan> clientLoans = new HashSet<>();
 
-    public Loan(String name, Integer maxAmount, List<Integer> payments) {
+    public Loan(String name, Integer maxAmount, List<Integer> payments, double interest) {
         this.name = name;
         this.maxAmount = maxAmount;
         this.payments = payments;
+        this.interest = interest;
+    }
+
+    public double getInterest() {
+        return interest;
+    }
+
+    public void setInterest(double interest) {
+        this.interest = interest;
     }
 
     public Set<ClientLoan> getClientLoans() {
@@ -46,7 +56,7 @@ public class Loan {
 
    @JsonIgnore
     public List<Client> getClient() {
-        return clientLoans.stream().map(ema -> ema.getClient()).collect(toList());
+        return clientLoans.stream().map(ClientLoan::getClient).collect(toList());
     }
 
     public long getId() {

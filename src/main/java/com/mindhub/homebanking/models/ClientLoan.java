@@ -3,8 +3,6 @@ package com.mindhub.homebanking.models;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 public class ClientLoan {
@@ -13,8 +11,10 @@ public class ClientLoan {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    private int amount;
+    private double amount;
     private int payments;
+    private double totalAmount;
+    private String account;
 
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="client_id")
@@ -27,23 +27,40 @@ public class ClientLoan {
     public ClientLoan() {
     }
 
-    public ClientLoan(int amount, int payments, Client client, Loan loan) {
+    public ClientLoan(double amount, int payments, Client client, Loan loan, String account) {
         this.amount = amount;
         this.payments = payments;
         this.client = client;
         this.loan = loan;
+        this.totalAmount = amount + (amount * (loan.getInterest() / 100));
+        this.account = account;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public long getId() {
         return id;
     }
 
-
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

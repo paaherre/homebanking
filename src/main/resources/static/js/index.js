@@ -1,5 +1,3 @@
-//axios.post('/api/login',"email=melba@mindhub.com&password=melba",{headers:{'content-type':'application/x-www-form-urlencoded'}}).then(response => console.log('signed in!!!'))
-//axios.post('/api/logout').then(response => console.log('signed out!!!'))
 const app = Vue.createApp({
     data() {
         return {
@@ -15,16 +13,17 @@ const app = Vue.createApp({
     methods: {
         login() {
             axios.post('/api/login', "email=" + this.email + "&password=" + this.password, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
-                .then(response => window.location.href = "/accounts.html")
-                .catch(err => swal('Usuario o Contraseña incorrecto'))
+                .then(() => window.location.href = "/accounts.html")
+                .catch(() => swal('Wrong mail or password'))
         },
-        dataPost() {
-            axios.post('/api/clients', "firstName=" + this.postFname + "&lastName=" + this.postLname + "&email=" + this.postEmail + "&password=" + this.postPassword, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
-                .then(response => swal('Se creó correctamente el usuario! Bienvenido a JDBank!!!'))
-                .then(res => {
-                    axios.post('/api/login', "email=" + this.postEmail + "&password=" + this.postPassword, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
-                        .then(response => window.location.href = "/accounts.html")
+        register() {
+            axios.post('/api/clients', "firstName=" + this.postFname + "&lastName=" + this.postLname + "&email=" + this.postEmail + "&password=" + this.postPassword + "&type=AHORRO", { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
+                .then(() => swal('Hi ' + this.postFname + ', Welcome to JD-HomeBanking !!!'))
+                .then(() => {
                     this.isUser = !this.isUser
+                    axios.post('/api/login', "email=" + this.postEmail + "&password=" + this.postPassword, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
+                        .then(() => window.location.href = "/accounts.html")
+
                 })
                 .catch(err => swal('Datos Incorrectos ' + err))
 

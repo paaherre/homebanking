@@ -20,7 +20,7 @@
 
     <!-- Local CSS -->
     <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/cards.css">
+    <link rel="stylesheet" href="./css/transfer.css">
 
     <!-- VueJS -->
     <script src="https://unpkg.com/vue@next"></script>
@@ -36,64 +36,28 @@
                 <a href="./index.html">Home</a>
                 <a href="./accounts.html">Accounts</a>
                 <a href="./cards.html">Cards</a>
+                <a href="./transfer.html">Transfers</a>
                 <a href="#" @click="logout">LogOut</a>
             </div>
         </header>
         <div>
-            <!--
-            <form action="" @submit.prevent="validar">
-                <div class="d-flex direction-row alig-center">
-                    <label for="cuentaOrigena">Cuenta Destino: </label>
-                    <select name="" id="cuentaOrigen" v-model="isPropia">
-                        <option value="propia">Propia</option>
-                        <option value="tercero">De tercero</option>
-                    </select>
-
-                    <div v-if="isPropia == 'propia'">
-                        <label for="fromPropAcc">Cuenta Origen: </label>
-                        <select name="fromPropAcc" id="fromPropAcc" v-model="fromAccount">
-                            <option v-for=" a in client.accounts" :value="a.number" :disabled="disabledFromAcc(a)">
-                                {{a.number}}
-                            </option>
-                        </select>
-                    </div>
-                    <div v-show="fromAccount && isPropia == 'propia'">
-                        <label for="toPropAcc">Cuenta Destino: </label>
-                        <select name="toPropAcc" id="toPropAcc" v-model="toAccount">
-                            <option v-for="ac in client.accounts" :value="ac.number" :disabled="disabledToAcc(ac)">
-                                {{ac.number}}
-                            </option>
-                        </select>
-                        <button type="button" id="cancelButton"
-                            @click="fromAccount = '', toAccount=''">cancelar</button>
-                    </div>
-                    <div v-show="isPropia == 'tercero'">
-                        <label for="toAccount">Ingrese cuenta Destino: </label>
-                        <input type="text" name="toAccount" id="toAccount" maxlength="11" size="12">
-                    </div>
-                </div>
-                <div>
-                    <label for="transferAmount">Ingrese Monto: </label>
-                    <input type="number" name="transferAmount" id="transferAmount" maxlength="4" size="10">
-                </div>
-                <br><button type="submit" id="submit">tocame</button>
-            </form> -->
-            <form action="" @submit.prevent="validar">
-                <div class="d-flex flex-row">
-                    <div class="d-flex flex-column m-5">
+            <form action="" @submit.prevent="transfer" @reset.prevent="resetTransfer">
+                <div class="d-flex flex-row justify-content-center">
+                    <div class="d-flex flex-column my-5 mx-2 labelColumn">
                         <label class="my-1" for="reciever">Destinatario: </label>
                         <label class="my-1" for="fromAccount">Cuenta Origen</label>
                         <label class="my-1" for="toAccount">Cuenta Destino</label>
-                        <label for="transferAmount">Ingrese Monto: </label>
+                        <label class="my-1" for="transferAmount">Ingrese Monto: </label>
+                        <label class="my-1" for="transferAmount">Motivo de transferencia: </label>
                     </div>
-                    <div class="d-flex flex-column m-5">
-                        <select class="my-1" name="reciever" id="reciever" v-model="isOwner">
+                    <div class="d-flex flex-column my-5 mx-2 inputColumn">
+                        <select class="my-1" name="reciever" id="reciever" v-model="isOwner" @change="resetAcc">
                             <option value="none" selected>Cuenta Destino</option>
                             <option :value="true">Propia</option>
                             <option :value="false">De tercero</option>
                         </select>
                         <select class="my-1" name="fromAccount" id="fromAccount" v-model="fromAccount">
-                            <option v-for="acc in client.accounts" :value="acc.number" :disabled="disabledFromAcc(acc)">
+                            <option v-for="acc in client.accounts" :value="acc.number">
                                 {{acc.number}}</option>
                         </select>
                         <select v-show="isOwner == true" class="my-1" name="toAccount" v-model="toAccount">
@@ -101,22 +65,63 @@
                                 {{acc.number}}</option>
                         </select>
                         <div v-show="isOwner == false" class="my-1">
-                            <input type="text" name="toAccount" maxlength="4" size="10" v-model="toAccount">
+                            <input type="text" name="toAccount" maxlength="11" size="11" v-model="toAccount">
                         </div>
                         <div v-show="isOwner == 'none'" class="my-1">
-                            <input type="number" name="transferAmount" maxlength="4" size="10" v-model="transferAmount"
+                            <input type="number" name="transferAmount" maxlength="11" size="11" v-model="transferAmount"
                                 placeholder="Seleccione Destinatario" disabled>
                         </div>
-                        <div>
-                            <input type="number" name="transferAmount" id="transferAmount" maxlength="4" size="10"
+                        <div class="my-1">
+                            <input type="number" name="transferAmount" id="transferAmount" maxlength="4" size="11"
                                 v-model="transferAmount">
                         </div>
+                        <div class="my-1">
+                            <input type="text" name="transferDesc" id="transferDesc" maxlength="20" size="20"
+                                v-model="transferDesc">
+                        </div>
+                    </div>
+                    <div class="infoColumn">
+                        <div class="my-5 mx-2 availableAmount">
+                            <p>Saldo disponibe para transferir:</p>
+                            <p>{{availableAmount}}</p>
+                        </div>
+
                     </div>
                 </div>
-                <button type="submit" id="submit">Tocame</button>
+                <button type="submit" data-bs-toggle="modal" data-bs-target="#transferModal" :disabled="transferData">
+                    Confirmar
+                </button>
+                <button type="reset" id="reset">Cancelar</button>
             </form>
         </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirmación de Transferencia</h5>
+                        <button type="button" class="btn-close" @click="resetTransfer" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Cuenta Origen: <span>{{fromAccount}}</span></h6>
+                        <h6>Cuenta Destino: <span>{{toAccount}}</span></h6>
+                        <h6>Importe a transferir: <span>{{transferAmount}}</span></h6>
+                        <h6>Motivo de transferencia: <span>{{transferDesc}}</span></h6>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                            @click="resetTransfer">Cancel</button>
+                        <button type="button" class="btn btn-success" @click="transferPost"
+                            data-bs-dismiss="modal">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"

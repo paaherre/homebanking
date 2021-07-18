@@ -1,20 +1,18 @@
 const app = Vue.createApp({
     data() {
         return {
-            client: [],
+            client: "",
             isOwner: "none",
             fromAccount: "",
             toAccount: "",
             transferAmount: "",
             transferDesc: "",
-            account: "",
         }
     },
     created() {
         axios.get('/api/clients/current')
             .then(res => {
                 this.client = res.data
-                console.log(this.client)
             })
     },
     methods: {
@@ -23,9 +21,8 @@ const app = Vue.createApp({
             axios.post('/api/logout')
                 .then(response => window.location.href = "/index.html")
         },
-        validar() {
-            console.log(this.isOwner)
-            console.log(this.fromAccount)
+        transfer() {
+
         },
         disabledFromAcc(a) {
             if (a.number == this.toAccount) {
@@ -39,13 +36,43 @@ const app = Vue.createApp({
             }
             return false;
         },
-        availableAcc(a) {
-            if (!this.client.account)
-                this.client.accounts.filter(e => e.number != this.fromAccount)
-            return
+        availableAcc() {
+            if (this.client != "") {
+                return this.client.accounts.filter(e => e.number != this.fromAccount)
+            }
+        },
+        resetAcc() {
+            this.fromAccount = ""
+            this.toAccount = ""
+            this.transferAmount = ""
+            this.transferDesc = ""
+        },
+        resetTransfer() {
+            this.isOwner = "none"
+            this.resetAcc()
+        },
+        transferPost() {
+            axios.post('/api/transfer', "amount=" + this.transferAmount + "&description=" + this.transferDesc + "&fromNumber=" + this.fromAccount + "&toNumber=" + this.toAccount, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
+                .then(response => swal('Transferencia exitosa'))
+                .catch(err => swal('No se pudo procesar la transferencia ' + err))
+            this.resetTransfer()
         }
     },
     computed: {
-
+        availableAmount() {
+            if (this.fromAccount != "") {
+                return this.client.accounts.filter(e => e.number == this.fromAccount)[0].balance
+            }
+        },
+        transferData() {
+            if (
+                this.fromAccount == "none" ||
+                this.toAccount == "" ||
+                this.transferAmount == "" ||
+                this.transferDesc == "") {
+                return true
+            }
+            return false
+        }
     }
 })

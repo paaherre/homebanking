@@ -14,12 +14,13 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
 
     <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <!-- Local CSS -->
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/index.css">
 
     <!-- VueJS -->
     <script src="https://unpkg.com/vue@next"></script>
@@ -28,61 +29,84 @@
 
 <body>
     <div id="app">
-        <header class="d-flex justify-content-between">
-            <img src="./img/logo-bank.png" class="mx-5" alt="">
-            <h1>JD HomeBanking</h1>
-            <div class="mx-5 align-self-center">
-                <a href="./index.html">Home</a>
-                <a href="./accounts.html">Accounts</a>
-                <a href="./cards.html">Cards</a>
+        <div class="mainContent">
+            <div class="titleLogin">
+                <h1>JD - HomeBanking</h1>
             </div>
-        </header>
+            <div class="login">
+                <div class="veen">
+                    <div class="login-btn splits">
+                        <img src="./img/logo-bank.png" alt="logo">
+                        <p>Already an user?</p>
+                        <button :class="isUser ? '' : 'active'" @click="isUser = !isUser">Login</button>
+                    </div>
+                    <div class="rgstr-btn splits">
+                        <img src="./img/logo-bank.png" alt="logo">
+                        <p>Don't have an account?</p>
+                        <button :class="isUser ? 'active' : ''" @click="isUser = !isUser">Register</button>
+                    </div>
+                    <div class="wrapper" :class="isUser ? '' : 'move'">
+                        <form id="login" tabindex="500" @submit.prevent="login">
+                            <h4>Welcome back!</h4>
+                            <h3>Login</h3>
+                            <div class="mail">
+                                <input v-model="email" type="email" class="form-control" required>
+                                <label>Email address</label>
+                            </div>
+                            <div class="passwd">
+                                <input v-model="password" type="password" class="form-control" required>
+                                <label>Password</label>
+                            </div>
+                            <div class="submit">
+                                <button class="dark">Login</button>
+                            </div>
+                        </form>
+                        <form id="register" tabindex="502" @submit.prevent="register">
+                            <h4>Join us!</h4>
+                            <h3>Register</h3>
+                            <div class="name">
+                                <input v-model="postFname" type="text" class="form-control" required>
+                                <label>First Name:</label>
+                            </div>
+                            <div class="lname">
+                                <input v-model="postLname" type="text" name="lname" class="form-control" required>
+                                <label>Last Name:</label>
+                            </div>
+                            <div class="mail">
+                                <input v-model="postEmail" type="mail" name="email" class="form-control" required>
+                                <label>Email:</label>
+                            </div>
+                            <div class="passwd">
+                                <input v-model="postPassword" type="password" name="password" class="form-control"
+                                    required>
+                                <label>Conteseña:</label>
+                            </div>
+                            <div class="submit">
+                                <button class="dark">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 
+        <style type="text/css">
+            .site-link {
+                padding: 5px 15px;
+                position: fixed;
+                z-index: 99999;
+                background: #fff;
+                box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
+                right: 30px;
+                bottom: 30px;
+                border-radius: 10px;
+            }
 
-        <div v-if="isUser" class="login d-flex flex-column text-center">
-            <h2>Ingrese su Cuenta:</h2>
-            <form class="form-floating mb-3" @submit.prevent="login">
-                <div class="form-floating mb-3">
-                    <input v-model="email" type="email" class="form-control" id="floatingInput"
-                        placeholder="name@example.com" required>
-                    <label for="floatingInput">Email address</label>
-                </div>
-                <div class="form-floating">
-                    <input v-model="password" type="password" class="form-control" id="floatingPassword"
-                        placeholder="Password" required>
-                    <label for="floatingPassword">Password</label>
-                </div>
-                <button class="btn btn-info mx-5" @click="isUser = !isUser">Registrarse</button>
-                <button type="submit" id="submit" class="btn btn-success">Ingresar</button>
-            </form>
-        </div>
-        <div v-if="!isUser" class="dataPost">
-            <h2>Alta de Clientes</h2>
-            <form class="Prueba" action="" @submit.prevent="dataPost">
-                <div class="form-floating mb-3">
-                    <input v-model="postFname" type="text" class="form-control" id="floatingFname"
-                        placeholder="name@example.com" required>
-                    <label for="floatingFname">First Name:</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input v-model="postLname" type="text" name="lname" class="form-control" id="floatingLname"
-                        placeholder="name@example.com" required>
-                    <label for="floatingLname">Last Name:</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input v-model="postEmail" type="mail" name="email" class="form-control" id="floatingMail"
-                        placeholder="name@example.com" required>
-                    <label for="floatingMail">Email:</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input v-model="postPassword" type="password" name="password" class="form-control"
-                        id="floatingPostPassword" placeholder="name@example.com" required>
-                    <label for="floatingPostPassword">Conteseña:</label>
-                </div>
-                <button type="submit" id="submitPost" class="btn btn-success mx-5">Confirmar
-                    Datos</button>
-                <button class="btn btn-info mx-5" @click="isUser = !isUser">Login</button>
-            </form>
-        </div>
+            .site-link img {
+                width: 30px;
+                height: 30px;
+            }
+        </style> -->
 
     </div>
     <!-- Bootstrap JS -->

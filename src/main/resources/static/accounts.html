@@ -10,6 +10,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -18,8 +20,12 @@
     <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+    <!-- AnimateCss -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
     <!-- Local CSS -->
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/accounts.css">
 
     <!-- VueJS -->
     <script src="https://unpkg.com/vue@next"></script>
@@ -27,24 +33,226 @@
 </head>
 
 <body>
-    <div id="app">
-        <header class="d-flex justify-content-between">
-            <img src="./img/logo-bank.png" class="mx-5" alt="">
-            <h1>JD HomeBanking</h1>
-            <div class="mx-5 align-self-center">
-                <a href="./index.html">Home</a>
-                <a href="./accounts.html">Accounts</a>
-                <a href="./cards.html">Cards</a>
-                <a href="#" @click="logout">LogOut</a>
+    <div id="app" class="bg-cover">
+        <div class="container-fkuid">
+            <header class="d-flex justify-content-evenly">
+                <img src="./img/logo-bank.png" class="" alt="">
+                <h1>JD Banking</h1>
+                <div class="burguer-menu-wrap">
+                    <div class="burguer-menu" @click="isMenu = !isMenu">
+                        <span class="line1" :class="isMenu ? '': 'left-forty-five'"></span>
+                        <span class="line2" :class="isMenu ? '': 'right-forty-five'"></span>
+                        <span class="line3" :class="isMenu ? '': 'hidden'"></span>
+                    </div>
+                    <div class="burguer-menu-tooltip" :class="isMenu ? '':'hidden'">
+                        <span>
+                            <a href="http://www.ceclatech.com/">Home</a>
+                        </span>
+                        <span>
+                            <a href="http://www.ceclatech.com/desarrollos-web/">Desarrollos</a>
+                        </span>
+                        <span>
+                            <a href="http://www.ceclatech.com/posicionamiento-buscadores/">SEO</a>
+                        </span>
+                        <span>
+                            <a href="http://www.ceclatech.com/marketing-buscadores/">SEM</a>
+                        </span>
+                        <span>
+                            <a href="http://www.ceclatech.com/clientes/">Clientes</a>
+                        </span>
+                        <span>
+                            <a href="http://www.ceclatech.com/contacto/">Contacto</a>
+                        </span>
+                    </div>
+                </div>
+                <!--             <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="d-flex justify-content-between align-self-center">
+                        <a href="./index.html">Home</a>
+                        <a href="./accounts.html">Accounts</a>
+                        <a href="./cards.html">Cards</a>
+                        <a href="./transfer.html">Transfers</a>
+                        <a href="#" @click="logout">LogOut</a>
+                    </div>
+                </div>
+            </nav> -->
+            </header>
+            <main>
+                <div class="welcome">
+                    <h2>Welcome back, {{client.firstName}} !!</h2>
+                </div>
+                <!-- Accounts -->
+                <section id="accounts">
+                    <h2>Manage your Accounts:</h2>
+                    <div class="accountCards">
+                        <div v-for="account in arraySorted(client.accounts)"
+                            class="card animate__animated animate__zoomInDown">
+                            <div class="cardContent">
+                                <div class="bg-hexagono">
+                                    <div class="clientInfo">
+                                        <h4>{{accountType(account.type)}}:</h4>
+                                        <h2><strong>{{account.number}}</strong></h2>
+                                    </div>
+                                </div>
+                                <div class="accountInfo">
+                                    <h4>Balance:</h4>
+                                    <h2>{{formatBalance(account.balance)}}</h2>
+                                </div>
+                            </div>
+                            <div class="details">
+                                <div class="center">
+                                    <div class="accountOps">
+                                        <h5><strong>Operations</strong></h5>
+                                        <div class="opsAccess">
+                                            <a href="#"><i class="fas fa-credit-card"></i> Cards</a>
+                                            <a href="#"><i class="fas fa-envelope-open-dollar"></i> Transfers</a>
+                                            <a href="#"><i class="fas fa-hand-holding-usd"></i> Loans</a>
+                                            <a href="#"><i class="fas fa-exchange-alt"></i> Transactions</a>
+                                        </div>
+                                    </div>
+                                    <div class="accountInfo">
+                                        <h5><strong>Account Info</strong></h5>
+                                        <ul>
+                                            <li>Owner: {{client.firstName + " " + client.lastName}}</li>
+                                            <li>Mail: {{client.email}}</li>
+                                            <li>Created: {{formatDate(account.creationDate)}}</li>
+                                        </ul>
+                                        <button class="btn btn-danger" @click="deleteAccount(account)">Delete
+                                            Account</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="accountsLength < 3" class="card animate__animated animate__zoomIn">
+                            <div class="cardContent">
+                                <div class="bg-hexagono">
+                                    <div class="clientInfo">
+                                        <h2><strong>Create New Account</strong></h2>
+                                        <label for="accType">Account Type</label>
+                                        <select name="accType" id="accType" v-model="accType">
+                                            <option value="" selected disabled>Select</option>
+                                            <option value="AHORRO">Savings Account</option>
+                                            <option value="CTACTE">Checking Account</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="addAccount" @click="createAccount">
+                                    <span>&plus;</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+                <!-- Loans Table -->
+                <section id="loans">
+                    <h2>Review your Loans:</h2>
+                    <div class="containerLoans">
+                        <ul class="responsive-table">
+                            <li class="table-header animate__animated animate__zoomInUp">
+                                <div class="col col-1">Loan Type</div>
+                                <div class="col col-2">Account</div>
+                                <div class="col col-3">Amount</div>
+                                <div class="col col-4">Payments</div>
+                            </li>
+                            <li class="table-row animate__animated animate__zoomInUp" @click="isLoansModal = true">
+                                <div class="col col-5" data-label="New Loan"><strong>Get your pre-aproved Loan
+                                        Here</strong>
+                                </div>
+
+                            </li>
+                            <li v-if="client.loans != ''" v-for="loan in arraySorted(client.loans)"
+                                class="table-row animate__animated animate__zoomInUp">
+                                <div class="col col-1" data-label="Loan Type">{{loan.loanName}}</div>
+                                <div class="col col-2" data-label="Account">{{loan.account}}</div>
+                                <div class="col col-3" data-label="Amount">{{formatBalance(loan.amount)}}</div>
+                                <div class="col col-4" data-label="Payments">{{loan.payments}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Modal Loan Aplication -->
+                <div v-show="isLoansModal" class="loansModal">
+                    <div class="row d-flex justify-content-evenly">
+                        <div class="modalContent">
+                            <div>Loan Type</div>
+                            <div>Account</div>
+                            <div>Amount</div>
+                            <div>Payments</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <form action="" @submit.prevent="aplication" @reset.prevent="resetForm">
+                                <div class="d-flex flex-row">
+                                    <div class="loansLabels d-flex flex-column my-5 mx-2">
+                                        <label for="loanName">Loan type: </label>
+                                        <label for="loanAccount">Cuenta Destino: </label>
+                                        <label for="loanAmount">Loan Amount: </label>
+                                        <label for="loanPayment">Payments: </label>
+                                    </div>
+                                    <div class="loansInputs d-flex flex-column my-5 mx-2">
+                                        <select name="loanName" id="loanName" v-model="loanName" @change="resetValues"
+                                            required>
+                                            <option value="" selected disabled>Loan</option>
+                                            <option v-for="l in loans" :value="l.name">{{l.name}}</option>
+                                        </select>
+                                        <select name="loanAccount" id="loanAccount" v-model="loanAccount" required>
+                                            <option value="" selected disabled>Cuenta</option>
+                                            <option v-for="a in accounts" :value="a.number">{{a.number}}</option>
+                                        </select>
+                                        <input type="range" min="1000" :max="maxRange()" step="1000"
+                                            v-model="loanAmount" required><span>{{loanAmount}}</span>
+                                        <select name="loanPayment" id="loanPayment" v-model="loanPayment" required>
+                                            <option value="" selected disabled>Cuotas</option>
+                                            <option v-for="p in paymentsByLoan()" :value="p">{{p}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button type="reset" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-success"
+                                        :disabled="aplicationConfirm()">Accept</button>
+                                </div>
+                            </form> -->
+
+        </div>
+        <footer>
+            <div class="siteMap rsAccess">
+                <ul>
+                    <li><a href="#accounts">Accounts</a></li>
+                    <li><a href="cards.html">Cards</a></li>
+                    <li><a href="transfer.html">Transfers</a></li>
+                    <li><a href="#" @click="logout">Logout</a></li>
+                </ul>
+                <ul>
+                    <li><a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i>
+                            Facebook</a></li>
+                    <li><a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i>
+                            Instagram</a></li>
+                    <li><a href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter-square"></i>
+                            Twitter</a></li>
+                </ul>
             </div>
-        </header>
-        <div class="mainContent">
+            <div class="copy">
+                <ul>
+                    <li>&copy; Pablo Herrera 2021</li>
+                    <li><a href="mailto:paaherre@gmail.com">paaherre@gmail.com</a></li>
+                </ul>
+            </div>
+        </footer>
+        </main>
+        <!-- <div class="mainContent">
             <a :href="'./cards.html?id='+ client.id"><button class="btn btn-success"> Ver Tarjetas</button></a>
             <div class="accountDisplay d-flex flex-row m-3 gap-5">
-                <div v-for="account in client.accounts">
+                <div v-for="account in arraySorted(client.accounts)">
                     <transition name="fade">
                         <div class="card" style="width: 18rem;">
-                            <a :href="'./account.html?id='+ account.id">
+                            <a :href="'./account.html?number='+ account.number">
                                 <div class="card-body cardStyle">
                                     <h5 class="card-title">Cuenta: {{account.number}}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">Titular: {{client.firstName +
@@ -62,42 +270,34 @@
                         </div>
                     </transition>
                 </div>
-                <button v-if="accounts < 3" class="btn btn-success" @click="crearCuenta">Agregar
+                <button v-if="accounts < 3" class="btn btn-success" style="width: 18rem;" @click="crearCuenta">Agregar
                     cuenta</button>
             </div>
             <div class="loansDisplay d-flex flex-row m-3 gap-5">
-                <transition name="fade">
-                    <div v-if="showData">
-                        <div v-if="loans" class="loansTable">
-                            <h4>Prestamos acreditados:</h4>
-                            <table class="table table-primary table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Registro</th>
-                                        <th>Tipo de Préstamo</th>
-                                        <th>Monto</th>
-                                        <th>Cuotas</th>
-                                    </tr>
-                                </thead>
-                                <tbody v-for="l in client.loans">
-                                    <tr>
-                                        <td>{{l.id}}</td>
-                                        <td>{{l.loanName}}</td>
-                                        <td>{{l.payments}}</td>
-                                        <td>{{l.amount}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div v-else>
-                            <h5>Solicite su préstamo Pre-Aprobado aquí!!</h5>
-                        </div>
-                    </div>
-                </transition>
+                <button class="btn btn-primary" @click="transfer()">Solicite su préstamo pre-aprobado aquí!!</button>
+                <div v-if="client.loans != ''" class="loansTable">
+                    <h4>Prestamos acreditados:</h4>
+                    <table class="table table-primary table-hover">
+                        <thead>
+                            <tr>
+                                <th>Registro</th>
+                                <th>Tipo de Préstamo</th>
+                                <th>Monto</th>
+                                <th>Cuotas</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="loan in arraySorted(client.loans)">
+                            <tr>
+                                <td>{{loan.id}}</td>
+                                <td>{{loan.loanName}}</td>
+                                <td>{{loan.amount}}</td>
+                                <td>{{loan.payments}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </div>
-
+        </div> -->
     </div>
 
     <!-- Bootstrap JS -->

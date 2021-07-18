@@ -3,6 +3,8 @@
     --color-blue: rgb(8, 121, 166);
 }
 body{
+    margin: 0;
+    padding: 0;
     min-height: 100vh;
     background: rgb(195,34,34);
     background: -moz-linear-gradient(130deg, rgba(195,34,34,0.65) 0%, rgba(0,0,0,0.6530987394957983) 100%);
@@ -21,18 +23,106 @@ header{
 header a{
     text-decoration: none;
     color: var(--color-blue);
-    font-size: 1em;
-    margin-left: 2em;
+    font-size: 1rem;
 }
 header a:hover{
     color: lightblue;
 }
 header img{
-    margin: 10px;
+    margin: 2.5vh 0;   
+    max-width: 6rem;
+    min-width: none;
 }
-header h1 ,h5{
+header h1{
+    margin: 0 2rem;
     align-self: center;
 }
+header div {
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+/* Menu */
+.burguer-menu-wrap{
+    margin-top: 2.5rem;
+}
+.burguer-menu{
+    border: 1px solid #0079ff;
+    width: 2.8rem;
+    display: block;
+    height: 3rem;
+    padding: .1rem .3rem;
+    position: relative;
+    border-radius: .3rem;
+    cursor: pointer;
+    text-align:center;
+    right:0;
+}
+
+.line1,.line2,.line3{
+display: block;
+border: 1px solid #0079ff;
+height: .5rem;
+overflow: hidden;
+margin-top: .3rem;
+background-color: #0079ff;
+border-radius: .3rem;
+transition: all 0.3s ease;
+width: 8px;
+margin: 4px auto
+}
+.turn-arrow{
+    -ms-transform: rotate(180deg); 
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.hidden{
+height: 0;
+border-color: transparent;
+background-color: transparent;
+display:none;
+visibility:hidden;
+}
+
+.left-forty-five{
+position: absolute;
+width: 1.7rem;
+top: 1rem;
+left: 1px;
+    -ms-transform: rotate(45deg); 
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.right-forty-five{
+position: absolute;
+width: 1.7rem;
+top: 1rem;
+right: 1px;
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+.burguer-menu-tooltip{
+background-color: #0079ff;
+max-width: 13rem;
+margin: .5rem 0 0 0;
+color: #fff;
+border-radius: .3rem;
+    transition: all 0.3s ease;
+}
+.burguer-menu-tooltip span{
+display:block;
+line-height: 3rem;
+padding: 0 1rem;
+}
+.burguer-menu-tooltip span a{
+color:#fff;
+}
+.burguer-menu-tooltip span:hover{
+background-color:green;
+}
+
+
 .mainContent{
     margin-top: 3vh;
     display: flex;
@@ -111,4 +201,14 @@ td>button{
     display: flex;
     justify-content: space-around;
     width: 50vw;
+}
+
+@media screen and (max-width: 768px){
+    header h1{
+        font-size: 1.25rem;
+    }
+    header div {
+        width: 100px;
+        flex-direction: column;
+    }
 }

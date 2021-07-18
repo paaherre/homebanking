@@ -36,25 +36,28 @@
                 <a href="./index.html">Home</a>
                 <a href="./accounts.html">Accounts</a>
                 <a href="./cards.html">Cards</a>
+                <a href="./transfer.html">Cards</a>
                 <a href="#" @click="logout">LogOut</a>
             </div>
         </header>
 
-        <h2>Alta de Tarjetas</h2>
-        <form @submit.prevent="createCards">
-            <label for="cardType">Tipo de Tarjeta: </label>
-            <select v-model="cardType" id="cardType" class="form-select" required>
-                <option value="credito">Crédito</option>
-                <option value="debito">Débito</option>
-            </select>
-            <label for="cardColor">Color de Tarjeta: </label>
-            <select v-model="cardColor" id="cardColor" class="form-select" required>
-                <option value="silver">Silver</option>
-                <option value="gold">Gold</option>
-                <option value="titanium">Titanium</option>
-            </select>
-            <button type="submit" id="submitCard" class="btn btn-success mx-5">Solicitar</button>
-        </form>
+        <div class="m-5">
+            <h2>Alta de Tarjetas</h2>
+            <form @submit.prevent="createCards">
+                <label for="cardType">Tipo de Tarjeta: </label>
+                <select v-model="cardType" id="cardType" class="form-select" required>
+                    <option value="credito">Crédito</option>
+                    <option value="debito">Débito</option>
+                </select>
+                <label for="cardColor">Color de Tarjeta: </label>
+                <select v-model="cardColor" id="cardColor" class="form-select" required>
+                    <option value="silver">Silver</option>
+                    <option value="gold">Gold</option>
+                    <option value="titanium">Titanium</option>
+                </select>
+                <button type="submit" id="submitCard" class="btn btn-success mx-5">Solicitar</button>
+            </form>
+        </div>
     </div>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"

@@ -39,33 +39,35 @@
                 <a href="#" @click="logout">LogOut</a>
             </div>
         </header>
-        <div class="mainContent">
-            <h1>Detalle de Transacciones:</h1>
-            <table class="mx-5 table table-primary table-hover">
-                <thead>
-                    <tr>
-                        <th>Número:</th>
-                        <th>Fecha:</th>
-                        <th>Descripción:</th>
-                        <th>Monto:</th>
-                        <th>Balance:</th>
-                    </tr>
-                </thead>
-                <div v-if="transactions.length">
-                    <tbody v-for="transaction in transactions">
-                        <tr>
-                            <td>{{transaction.id}}</td>
-                            <td>{{transactionDate(transaction.transactionDate)}}</td>
-                            <td>{{transaction.description}}</td>
-                            <td :class="transaction.type == 'CREDITO' ? 'text-success' : 'text-danger'">
-                                {{transaction.amount}}</td>
-                            <td :class="transaction.balance > 0 ? 'text-success' : 'text-danger'">
-                                {{transaction.balance}}</td>
-                        </tr>
-                    </tbody>
+
+        <form action="" @submit.prevent="aplication" @reset.prevent="resetForm">
+            <div class="d-flex flex-row">
+                <div class="loansLabels d-flex flex-column my-5 mx-2">
+                    <label for="loanName">Tipo de Préstamo: </label>
+                    <label for="loanAccount">Cuenta Destino: </label>
+                    <label for="loanAmount">Ingrese monto del Préstamo: </label>
+                    <label for="loanPayment">Ingrese cantidad de Cuotas: </label>
                 </div>
-            </table>
-        </div>
+                <div class="loansInputs d-flex flex-column my-5 mx-2">
+                    <select name="loanName" id="loanName" v-model="loanName" @change="resetValues" required>
+                        <option value="" selected disabled>Prestamo</option>
+                        <option v-for="l in loans" :value="l.name">{{l.name}}</option>
+                    </select>
+                    <select name="loanAccount" id="loanAccount" v-model="loanAccount" required>
+                        <option value="" selected disabled>Cuenta</option>
+                        <option v-for="a in accounts" :value="a.number">{{a.number}}</option>
+                    </select>
+                    <input type="range" min="1000" :max="maxRange()" step="1000" v-model="loanAmount"
+                        required><span>{{loanAmount}}</span>
+                    <select name="loanPayment" id="loanPayment" v-model="loanPayment" required>
+                        <option value="" selected disabled>Cuotas</option>
+                        <option v-for="p in paymentsByLoan()" :value="p">{{p}}</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success" :disabled="aplicationConfirm()">Confirmar</button>
+            <button type="reset" class="btn btn-danger">Borrar</button>
+        </form>
     </div>
 
     <!-- Bootstrap JS -->
@@ -74,7 +76,7 @@
         crossorigin="anonymous"></script>
 
     <!-- Local JS -->
-    <script src="./js/account.js"></script>
+    <script src="./js/loan-aplication.js"></script>
 
     <!-- Mount APP -->
     <script>

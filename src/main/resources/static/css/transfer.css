@@ -1,0 +1,9 @@
+.labelColumn label {
+    height: 2.1rem;    
+}
+.inputColumn select{
+    height: 2rem;
+}
+.inputColumn div{
+    height: 2rem;
+}
