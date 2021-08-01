@@ -36,7 +36,7 @@ public class CardController {
         Client clientGeneral = clientRepository.findByEmail(authentication.getName());
 
         if( clientGeneral.getCards().stream().filter(e -> e.getType().toString().equals(type.toString()) ).count() > 2) {
-            return new ResponseEntity<>("403 prohibida", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("403 Ya tiene 3 tarjetas de ese tipo", HttpStatus.FORBIDDEN);
         }
 
         cardRepository.save(new Card(clientGeneral, Utility.getCardNumber(1000,9999), Utility.getRandomNumber(100,999), LocalDate.now(), LocalDate.now().plusYears(5), type, color));

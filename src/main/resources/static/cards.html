@@ -10,6 +10,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -17,6 +19,9 @@
 
     <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- AnimateCss -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <!-- Local CSS -->
     <link rel="stylesheet" href="./css/style.css">
@@ -29,10 +34,34 @@
 
 <body>
     <div id="app">
-        <header class="d-flex justify-content-between">
-            <img src="./img/logo-bank.png" class="mx-5" alt="">
-            <h1>JD HomeBanking</h1>
-            <div class="mx-5 align-self-center">
+        <header class="d-flex justify-content-evenly">
+            <a href="./accounts.html"><img src="./img/logo-bank.png" class="" alt=""></a>
+            <h1>JD Banking</h1>
+            <div class="burguer-menu-wrap">
+                <div class="burguer-menu" @click="isMenu = !isMenu">
+                    <span class="line1" :class="isMenu ? '': 'left-forty-five'"></span>
+                    <span class="line2" :class="isMenu ? '': 'right-forty-five'"></span>
+                    <span class="line3" :class="isMenu ? '': 'hidden'"></span>
+                </div>
+                <div class="burguer-menu-tooltip" :class="isMenu ? '':'hidden'">
+                    <span>
+                        <a href="./index.html">Home</a>
+                    </span>
+                    <span>
+                        <a href="./accounts.html">Accounts</a>
+                    </span>
+                    <span>
+                        <a href="./cards.html">Cards</a>
+                    </span>
+                    <span>
+                        <a href="./transfer.html">Transfers</a>
+                    </span>
+                    <span>
+                        <a href="#" @click="logout">LogOut</a>
+                    </span>
+                </div>
+            </div>
+            <div class="menu d-flex justify-content-between align-self-center">
                 <a href="./index.html">Home</a>
                 <a href="./accounts.html">Accounts</a>
                 <a href="./cards.html">Cards</a>
@@ -40,115 +69,98 @@
                 <a href="#" @click="logout">LogOut</a>
             </div>
         </header>
-
-        <a v-show="maxCards < 6" href="./create-cards.html"><button class="btn btn-success">Solicitar Nueva
-                Tarjeta</button></a>
-        <div class="cardsSection">
-            <div class="cardContainer">
-                <h3>Tarjetas de Débito</h3>
-                <div v-if="debit.length" v-for="d in debit" class="card">
-                    <div class="card__front card__part" :class="typeCard(d.cardColor)">
-                        <img class="card__front-square card__square" src="./img/logo-bank.png">
-                        <!--<img class="card__front-logo card__logo"
-                            src="https://www.fireeye.com/partners/strategic-technology-partners/visa-fireeye-cyber-watch-program/_jcr_content/content-par/grid_20_80_full/grid-20-left/image.img.png/1505254557388.png">-->
-                        <p class="card_numer">{{d.number}}</p>
-                        <div class="card__space-75">
-                            <span class="card__label">Card holder</span>
-                            <p class="card__info">{{d.cardHolder}}</p>
-                        </div>
-                        <div class="card__space-25">
-                            <span class="card__label">Expires</span>
-                            <p class="card__info" :class="expiredCard(d.truDate) ? 'expiredCard' : ''">
-                                {{expires(d.truDate)}}</p>
-                        </div>
-                    </div>
-
-                    <div class="card__back card__part " :class="typeCard(d.cardColor)">
-                        <div class="card__black-line"></div>
-                        <div class="card__back-content">
-                            <div class="card__secret">
-                                <p class="card__secret--last">{{d.cvv}}</p>
-                            </div>
-                            <button type="button" class="card__back-square card__square btn-danger"
-                                data-bs-toggle="modal" data-bs-target="#deleteCardModal" @click="deleteCard(d)">
-                                Eliminar
-                            </button>
-                            <!-- <img class="card__back-square card__square"
-                                src="https://image.ibb.co/cZeFjx/little_square.png">-->
-                            <img class="card__back-logo card__logo" src="./img/banelco.png">
-
-                        </div>
+        <main>
+            <div class="bg-cover">
+                <div class="cards">
+                    <div class="debitCard">
+                        <h2>Debit Cards:</h2>
+                        <cards-carousel :type="'debito'" :cards="cardsByType('DEBITO')" @delete-card="deleteCard"
+                            @new-card="newCardModal"></cards-carousel>
                     </div>
                 </div>
-                <div v-else>
-                    <h3>Solicitala aquí!</h3>
+                <div class="cards">
+                    <div class="creditCard">
+                        <h2>Credit Cards:</h2>
+                        <cards-carousel :type="'credito'" :cards="cardsByType('CREDITO')" @delete-card="deleteCard"
+                            @new-card="newCardModal"></cards-carousel>
+                    </div>
                 </div>
             </div>
-            <div class="cardContainer">
-                <h3>Tarjetas de Crédito</h3>
-                <div v-if="credit.length" v-for="d in credit" class="card">
-                    <div class="card__front card__part" :class="typeCard(d.cardColor)">
-                        <img class="card__front-square card__square" src="./img/logo-bank.png">
-                        <!--<img class="card__front-logo card__logo"
-                            src="https://www.fireeye.com/partners/strategic-technology-partners/visa-fireeye-cyber-watch-program/_jcr_content/content-par/grid_20_80_full/grid-20-left/image.img.png/1505254557388.png">-->
-                        <p class="card_numer">{{d.number}}</p>
-                        <div class="card__space-75">
-                            <span class="card__label">Card holder</span>
-                            <p class="card__info">{{d.cardHolder}}</p>
-                        </div>
-                        <div class="card__space-25">
-                            <span class="card__label">Expires</span>
-                            <p class="card__info" :class="expiredCard(d.truDate) ? 'expiredCard' : ''">
-                                {{expires(d.truDate)}}</p>
-                        </div>
-                    </div>
-
-                    <div class="card__back card__part" :class="typeCard(d.cardColor)">
-                        <div class="card__black-line"></div>
-                        <div class="card__back-content">
-                            <div class="card__secret">
-                                <p class="card__secret--last">{{d.cvv}}</p>
-                            </div>
-                            <button type="button" class="card__back-square card__square btn-danger"
-                                data-bs-toggle="modal" data-bs-target="#deleteCardModal" @click="deleteCard(d)">
-                                Eliminar
-                            </button>
-                            <!-- <img class="card__back-square card__square"
-                                src="https://image.ibb.co/cZeFjx/little_square.png">-->
-                            <img class="card__back-logo card__logo" src="./img/banelco.png">
-
-                        </div>
-                    </div>
-                </div>
-                <div v-else>
-                    <h3>Solicitala aquí!</h3>
-                </div>
-            </div>
-        </div>
-
+        </main>
         <!-- deleteCardModal -->
-        <div class="modal fade" id="deleteCardModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Elimar Tarjeta</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                            @click="deleteCardCancel"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>¿Está seguro que desea eliminar la tarjeta?</p>
-                        <p>Número: {{deleteCardNumber}}</p>
-                        <p>Esta acción no puede revertirse.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            @click="deleteCardCancel">Cancel</button>
-                        <button type="button" class="btn btn-danger" @click="deleteCardConfirm">Confirmar</button>
+        <div v-show="isDeleteCardModal" class="newCardModal">
+            <div class="row d-flex justify-content-evenly animate__animated animate__zoomIn">
+                <div class="modalContent">
+                    <div class="mt-5">
+                        <h4>Delete Card:</h4>
+                        <div class="modalText">
+                            <p>Are you sure ?</p>
+                            <p>Card Number: {{deleteCardNumber}}</p>
+                            <p>This operation cannot be reverted.</p>
+                        </div>
+                        <div class="d-flex my-2 justify-content-between">
+                            <button class="btn btn-danger"
+                                @click="isDeleteCardModal=false, deleteCardCancel">Cancel</button>
+                            <button class="btn btn-success" @click="deleteCardConfirm">Confirm</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Modal New Card -->
+        <div v-show="isNewCardModal" class="newCardModal">
+            <div class="row d-flex justify-content-evenly animate__animated animate__zoomIn">
+                <div class="modalContent">
+                    <div class="mt-5">
+                        <h4>New Card:</h4>
+                        <form @submit.prevent="createCard" class="d-flex flex-column">
+                            <label for="cardType">Card Type: </label>
+                            <select v-model="cardType" id="cardType" class="form-select" required>
+                                <option value="" selected disabled>Select</option>
+                                <option value="credito">Credit</option>
+                                <option value="debito">Debit</option>
+                            </select>
+                            <label for="cardColor">Card Color: </label>
+                            <select v-model="cardColor" id="cardColor" class="form-select" required>
+                                <option value="" selected disabled>Select</option>
+                                <option value="silver">Silver</option>
+                                <option value="gold">Gold</option>
+                                <option value="titanium">Titanium</option>
+                            </select>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="reset" class="btn btn-danger"
+                                    @click="isNewCardModal = false, cardType = '', cardColor=''">Cancel</button>
+                                <button type="submit" id="submitCard" class="btn btn-success">Confirm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="siteMap rsAccess">
+                <ul>
+                    <li><a href="#accounts">Accounts</a></li>
+                    <li><a href="cards.html">Cards</a></li>
+                    <li><a href="transfer.html">Transfers</a></li>
+                    <li><a href="#" @click="logout">Logout</a></li>
+                </ul>
+                <ul>
+                    <li><a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i>
+                            Facebook</a></li>
+                    <li><a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i>
+                            Instagram</a></li>
+                    <li><a href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter-square"></i>
+                            Twitter</a></li>
+                </ul>
+            </div>
+            <div class="copy">
+                <ul>
+                    <li>&copy; Pablo Herrera 2021</li>
+                    <li><a href="mailto:paaherre@gmail.com">paaherre@gmail.com</a></li>
+                </ul>
+            </div>
+        </footer>
     </div>
 
     <!-- Bootstrap JS -->
@@ -158,6 +170,9 @@
 
     <!-- Local JS -->
     <script src="./js/cards.js"></script>
+
+    <!-- Components -->
+    <script src="./js/components/carouselCards.js"></script>
 
     <!-- Mount APP -->
     <script>

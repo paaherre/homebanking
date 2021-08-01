@@ -24,6 +24,7 @@ body{
 }
 .veen{
     width: 70%;
+    max-width: 1000px;
     margin: 100px auto;
     background: rgba(255,255,255,.5);
     min-height: 400px;
@@ -75,7 +76,7 @@ body{
 }
 .veen > .wrapper {
     position: absolute;
-    width: 40%;
+    width: 50%;
     height: 120%;
     top: -10%;
     left: 5%;
@@ -192,7 +193,7 @@ visibility: hidden;
     .splits.rgstr-btn button.active{
         background: rgb(8, 121, 166);
     }
-    .splits p{
+    .splits p, img{
         display: none;
     }
     .veen > .wrapper.move{

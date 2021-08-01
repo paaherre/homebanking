@@ -33,55 +33,44 @@
 </head>
 
 <body>
-    <div id="app" class="bg-cover">
-        <div class="container-fkuid">
-            <header class="d-flex justify-content-evenly">
-                <img src="./img/logo-bank.png" class="" alt="">
-                <h1>JD Banking</h1>
-                <div class="burguer-menu-wrap">
-                    <div class="burguer-menu" @click="isMenu = !isMenu">
-                        <span class="line1" :class="isMenu ? '': 'left-forty-five'"></span>
-                        <span class="line2" :class="isMenu ? '': 'right-forty-five'"></span>
-                        <span class="line3" :class="isMenu ? '': 'hidden'"></span>
-                    </div>
-                    <div class="burguer-menu-tooltip" :class="isMenu ? '':'hidden'">
-                        <span>
-                            <a href="http://www.ceclatech.com/">Home</a>
-                        </span>
-                        <span>
-                            <a href="http://www.ceclatech.com/desarrollos-web/">Desarrollos</a>
-                        </span>
-                        <span>
-                            <a href="http://www.ceclatech.com/posicionamiento-buscadores/">SEO</a>
-                        </span>
-                        <span>
-                            <a href="http://www.ceclatech.com/marketing-buscadores/">SEM</a>
-                        </span>
-                        <span>
-                            <a href="http://www.ceclatech.com/clientes/">Clientes</a>
-                        </span>
-                        <span>
-                            <a href="http://www.ceclatech.com/contacto/">Contacto</a>
-                        </span>
-                    </div>
+    <div id="app">
+        <header class="d-flex justify-content-evenly">
+            <a href="./accounts.html"><img src="./img/logo-bank.png" class="" alt=""></a>
+            <h1>JD Banking</h1>
+            <div class="burguer-menu-wrap">
+                <div class="burguer-menu" @click="isMenu = !isMenu">
+                    <span class="line1" :class="isMenu ? '': 'left-forty-five'"></span>
+                    <span class="line2" :class="isMenu ? '': 'right-forty-five'"></span>
+                    <span class="line3" :class="isMenu ? '': 'hidden'"></span>
                 </div>
-                <!--             <nav class="navbar navbar-expand-lg navbar-light">
-                <div class="container-fluid">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="d-flex justify-content-between align-self-center">
+                <div class="burguer-menu-tooltip" :class="isMenu ? '':'hidden'">
+                    <span>
                         <a href="./index.html">Home</a>
+                    </span>
+                    <span>
                         <a href="./accounts.html">Accounts</a>
+                    </span>
+                    <span>
                         <a href="./cards.html">Cards</a>
+                    </span>
+                    <span>
                         <a href="./transfer.html">Transfers</a>
+                    </span>
+                    <span>
                         <a href="#" @click="logout">LogOut</a>
-                    </div>
+                    </span>
                 </div>
-            </nav> -->
-            </header>
-            <main>
+            </div>
+            <div class="menu d-flex justify-content-between align-self-center">
+                <a href="./index.html">Home</a>
+                <a href="./accounts.html">Accounts</a>
+                <a href="./cards.html">Cards</a>
+                <a href="./transfer.html">Transfers</a>
+                <a href="#" @click="logout">LogOut</a>
+            </div>
+        </header>
+        <main>
+            <div class="bg-cover">
                 <div class="welcome">
                     <h2>Welcome back, {{client.firstName}} !!</h2>
                 </div>
@@ -108,10 +97,15 @@
                                     <div class="accountOps">
                                         <h5><strong>Operations</strong></h5>
                                         <div class="opsAccess">
-                                            <a href="#"><i class="fas fa-credit-card"></i> Cards</a>
-                                            <a href="#"><i class="fas fa-envelope-open-dollar"></i> Transfers</a>
-                                            <a href="#"><i class="fas fa-hand-holding-usd"></i> Loans</a>
-                                            <a href="#"><i class="fas fa-exchange-alt"></i> Transactions</a>
+                                            <a href="./cards.html"><i class="fas fa-credit-card"></i> Cards</a>
+                                            <span @click="toTransferSection(account.number)"><i
+                                                    class="fas fa-envelope-open-dollar"></i>
+                                                Transfers</span>
+                                            <span @click="isLoansModal = true, loanAccount = account.number"><i
+                                                    class="fas fa-hand-holding-usd"></i> Loans</span>
+                                            <span @click="toTransactionSection(account.number)"><i
+                                                    class="fas fa-exchange-alt"></i>
+                                                Transactions</span>
                                         </div>
                                     </div>
                                     <div class="accountInfo">
@@ -160,7 +154,8 @@
                                 <div class="col col-4">Payments</div>
                             </li>
                             <li class="table-row animate__animated animate__zoomInUp" @click="isLoansModal = true">
-                                <div class="col col-5" data-label="New Loan"><strong>Get your pre-aproved Loan
+                                <div class="col col-5 " data-label="New Loan"><strong>Get
+                                        your pre-aproved Loan
                                         Here</strong>
                                 </div>
 
@@ -178,49 +173,73 @@
 
                 <!-- Modal Loan Aplication -->
                 <div v-show="isLoansModal" class="loansModal">
-                    <div class="row d-flex justify-content-evenly">
+                    <div class="row d-flex justify-content-evenly animate__animated animate__zoomIn">
                         <div class="modalContent">
-                            <div>Loan Type</div>
-                            <div>Account</div>
-                            <div>Amount</div>
-                            <div>Payments</div>
-                        </div>
-                    </div>
-                </div>
-                <!-- <form action="" @submit.prevent="aplication" @reset.prevent="resetForm">
-                                <div class="d-flex flex-row">
-                                    <div class="loansLabels d-flex flex-column my-5 mx-2">
+                            <form action="" @submit.prevent="aplication" @reset.prevent="resetForm"
+                                class="d-flex flex-column gap-3">
+                                <h4>Select your Loan:</h4>
+                                <div class="loansData d-flex flex-column my-2 mx-2 gap-2">
+                                    <div class="loanName">
                                         <label for="loanName">Loan type: </label>
-                                        <label for="loanAccount">Cuenta Destino: </label>
-                                        <label for="loanAmount">Loan Amount: </label>
-                                        <label for="loanPayment">Payments: </label>
-                                    </div>
-                                    <div class="loansInputs d-flex flex-column my-5 mx-2">
-                                        <select name="loanName" id="loanName" v-model="loanName" @change="resetValues"
-                                            required>
+                                        <select name="loanName" id="loanName" v-model="loanName" required>
                                             <option value="" selected disabled>Loan</option>
                                             <option v-for="l in loans" :value="l.name">{{l.name}}</option>
                                         </select>
+                                    </div>
+                                    <div class="loanAccount">
+                                        <label for="loanAccount">Account: </label>
                                         <select name="loanAccount" id="loanAccount" v-model="loanAccount" required>
                                             <option value="" selected disabled>Cuenta</option>
                                             <option v-for="a in accounts" :value="a.number">{{a.number}}</option>
                                         </select>
-                                        <input type="range" min="1000" :max="maxRange()" step="1000"
-                                            v-model="loanAmount" required><span>{{loanAmount}}</span>
+                                        <h5>Current balance: {{formatBalance(currentBalance())}}</h5>
+                                    </div>
+                                    <div class="loanAmount">
+                                        <label for="loanAmount">Loan Amount: </label>
+                                        <input type="number" min="1000" :max="maxRange()" v-model="loanAmount" required>
+                                        <h5>Max available: {{formatBalance(maxRange())}}</h5>
+                                    </div>
+                                    <div class="loanPayment">
+                                        <label for="loanPayment">Payments: </label>
                                         <select name="loanPayment" id="loanPayment" v-model="loanPayment" required>
-                                            <option value="" selected disabled>Cuotas</option>
+                                            <option value="" selected disabled>Select</option>
                                             <option v-for="p in paymentsByLoan()" :value="p">{{p}}</option>
                                         </select>
+                                        <h5>{{loanFees()}} </h5>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between">
-                                    <button type="reset" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                <div class="d-flex justify-content-between mb-0">
+                                    <button type="reset" class="btn btn-danger"
+                                        @click="isLoansModal = false">Cancel</button>
                                     <button type="submit" class="btn btn-success"
                                         :disabled="aplicationConfirm()">Accept</button>
                                 </div>
-                            </form> -->
-
-        </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Delete Card -->
+                <div v-show="isDeleteAcc" class="loansModal">
+                    <div class="row d-flex justify-content-evenly animate__animated animate__zoomIn">
+                        <div class="modalContent">
+                            <div class="d-flex flex-column deleteAccount">
+                                <h4>Deleting Account</h4>
+                                <div class="text-center">
+                                    <p>Your Account balance must be $0.00</p>
+                                    <p>Your Account current balance is: {{formatBalance(deletingAccount.balance)}}</p>
+                                    <p>¿Do you want to transfer the remaining balance to another account?</p>
+                                </div>
+                                <div class="d-flex flex-row justify-content-between mx-5">
+                                    <button class="btn btn-danger"
+                                        @click="isDeleteAcc = false, deletingAccount = ''">Cancel</button>
+                                    <button class="btn btn-success" @click="toDeleteTransfer">Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
         <footer>
             <div class="siteMap rsAccess">
                 <ul>
@@ -245,59 +264,6 @@
                 </ul>
             </div>
         </footer>
-        </main>
-        <!-- <div class="mainContent">
-            <a :href="'./cards.html?id='+ client.id"><button class="btn btn-success"> Ver Tarjetas</button></a>
-            <div class="accountDisplay d-flex flex-row m-3 gap-5">
-                <div v-for="account in arraySorted(client.accounts)">
-                    <transition name="fade">
-                        <div class="card" style="width: 18rem;">
-                            <a :href="'./account.html?number='+ account.number">
-                                <div class="card-body cardStyle">
-                                    <h5 class="card-title">Cuenta: {{account.number}}</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">Titular: {{client.firstName +
-                                        " "
-                                        +client.lastName}}</h6>
-                                    <h6 class="card-subtitle mb-2 text-muted">email: {{client.email}}</h6>
-                                    <hr>
-                                    <p class="text-muted">Saldo:</p>
-                                    <h2 class="card-title text-center mb-3">{{account.balance}}</h2>
-                                    <h6 class="card-subtitle mb-2 text-muted">Alta:
-                                        {{formatDate(account.creationDate)}}
-                                    </h6>
-                                </div>
-                            </a>
-                        </div>
-                    </transition>
-                </div>
-                <button v-if="accounts < 3" class="btn btn-success" style="width: 18rem;" @click="crearCuenta">Agregar
-                    cuenta</button>
-            </div>
-            <div class="loansDisplay d-flex flex-row m-3 gap-5">
-                <button class="btn btn-primary" @click="transfer()">Solicite su préstamo pre-aprobado aquí!!</button>
-                <div v-if="client.loans != ''" class="loansTable">
-                    <h4>Prestamos acreditados:</h4>
-                    <table class="table table-primary table-hover">
-                        <thead>
-                            <tr>
-                                <th>Registro</th>
-                                <th>Tipo de Préstamo</th>
-                                <th>Monto</th>
-                                <th>Cuotas</th>
-                            </tr>
-                        </thead>
-                        <tbody v-for="loan in arraySorted(client.loans)">
-                            <tr>
-                                <td>{{loan.id}}</td>
-                                <td>{{loan.loanName}}</td>
-                                <td>{{loan.amount}}</td>
-                                <td>{{loan.payments}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div> -->
     </div>
 
     <!-- Bootstrap JS -->

@@ -9,11 +9,9 @@ import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -22,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class PaymentsController {
@@ -37,7 +36,41 @@ public class PaymentsController {
 
     @Transactional
     @PostMapping("/payment")
-    public ResponseEntity<?> payment(@RequestBody PaymentDTO paymentDTO){
+    /*@RequestMapping(value="/payment", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)*/
+    public ResponseEntity<?> payment(@RequestBody PaymentDTO paymentDTO) {
+
+        /*
+        axios.post("http://localhost:8080/api/payment", {
+            name: "Melba Morel",
+            number: "8387-3509-2174-4540",
+            cvv: 823,
+            thruDate: "2026-07-26",
+            description: "Pago",
+            amount: 12345
+        })
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+
+        var url = 'http://localhost:8080/api/payment';
+        var data = {name: "Melba Morel",
+            number: "8387-3509-2174-4540",
+            cvv: 823,
+            thruDate: "2026-07-26",
+            description: "Pago",
+            amount: 12345};
+
+        fetch(url, {
+          method: 'POST', // or 'PUT'
+          body: JSON.stringify(data), // data can be `string` or {object}!
+          mode: 'no-cors',
+          headers:{
+            'Content-Type': 'application/json'
+          }
+        }).then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+
+        */
 
         Card card = cardRepository.findByNumber(paymentDTO.getNumber());
         if(card == null){
@@ -48,7 +81,7 @@ public class PaymentsController {
         if(client == null){
             return new ResponseEntity<>("No se encontró cliente", HttpStatus.FORBIDDEN);
         }
-        if(paymentDTO.getThruDate().compareTo(LocalDate.now()) < 0){
+        if(paymentDTO.getThruDate().compareTo(LocalDate.now()) <= 0){
             return new ResponseEntity<>("Datos incorrectos - Vencimiento", HttpStatus.FORBIDDEN);
         }
         if(!card.getCardHolder().equals(paymentDTO.getName())){
@@ -59,8 +92,13 @@ public class PaymentsController {
         }
 
         List<Account> accounts = new ArrayList<>(client.getAccounts());
-        Account account = accounts.stream().filter(a -> a.getBalance() >= paymentDTO.getAmount()).findAny().get();
-        transactionRepository.save(new Transaction(paymentDTO.getAmount(), LocalDateTime.now(),  "Pago - " + paymentDTO.getDescription(), account, TransactionType.DEBITO));
+        Account account = accounts.stream().filter(a -> a.getBalance() >= paymentDTO.getAmount()).findFirst().get();
+
+        if(account.getNumber() == null){
+            new ResponseEntity<>("Saldo insuficiente", HttpStatus.FORBIDDEN);
+        }
+
+        transactionRepository.save(new Transaction(- paymentDTO.getAmount(), LocalDateTime.now(),  "Pago - " + paymentDTO.getDescription(), account, TransactionType.DEBITO));
         account.setBalance(account.getBalance() - paymentDTO.getAmount());
         accountRepository.save(account);
 

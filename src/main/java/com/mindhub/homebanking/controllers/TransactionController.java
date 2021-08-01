@@ -1,6 +1,8 @@
 package com.mindhub.homebanking.controllers;
 
 
+import com.lowagie.text.DocumentException;
+import com.mindhub.homebanking.dtos.PDFExportDTO;
 import com.mindhub.homebanking.dtos.TransactionDTO;
 import com.mindhub.homebanking.dtos.TransactionFilterDTO;
 import com.mindhub.homebanking.models.Account;
@@ -18,14 +20,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class TransactionController {
@@ -101,7 +106,7 @@ public class TransactionController {
     @PostMapping ("/transactions")
     public ResponseEntity <?> ListTransactionDTO(Authentication authentication, @RequestBody TransactionFilterDTO transactionFilterDTO){
 
-        transactionFilterDTO.setHastaFecha(LocalDate.now().plusDays(1));
+        transactionFilterDTO.setHastaFecha(transactionFilterDTO.getHastaFecha().plusDays(1));
 
         Client client = clientRepository.findByEmail(authentication.getName());
         Account account = accountRepository.findByNumber(transactionFilterDTO.getAccountNumber());
@@ -113,7 +118,33 @@ public class TransactionController {
         List<LocalDate> listOfDates = transactionFilterDTO.getDesdeFecha().datesUntil(transactionFilterDTO.getHastaFecha()).collect(Collectors.toList());
         List<TransactionDTO> transactionDTOList = account.getTransactions().stream().map(TransactionDTO::new).collect(Collectors.toList());
         List<TransactionDTO> transactionDTOList1 = transactionDTOList.stream().filter(e -> listOfDates.contains(e.getTransactionDate().toLocalDate())).collect(Collectors.toList());
+        transactionDTOList1.sort(Comparator.comparing(TransactionDTO::getTransactionDate).reversed());
 
         return new ResponseEntity<>(transactionDTOList1, HttpStatus.ACCEPTED);
+    }
+
+
+    @PostMapping ("/transaction/export/pdf")
+    public void exportToPDF(HttpServletResponse response, Authentication authentication, @RequestBody TransactionFilterDTO transactionFilterDTO) throws DocumentException, IOException {
+
+        transactionFilterDTO.setHastaFecha(transactionFilterDTO.getHastaFecha().plusDays(1));
+
+        Account account = accountRepository.findByNumber(transactionFilterDTO.getAccountNumber());
+
+        response.setContentType("aplication/pdf");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=file.pdf";
+        response.setHeader(headerKey, headerValue);
+
+        List<LocalDate> listOfDates = transactionFilterDTO.getDesdeFecha().datesUntil(transactionFilterDTO.getHastaFecha()).collect(Collectors.toList());
+        List<TransactionDTO> transactionDTOList = account.getTransactions().stream().map(TransactionDTO::new).collect(Collectors.toList());
+        List<TransactionDTO> transactionDTOList1 = transactionDTOList.stream().filter(e -> listOfDates.contains(e.getTransactionDate().toLocalDate())).collect(Collectors.toList());
+        transactionDTOList1.sort(Comparator.comparing(TransactionDTO::getTransactionDate).reversed());
+        PDFExportDTO exporter = new PDFExportDTO(transactionDTOList1);
+        exporter.export(response);
+
     }
 }

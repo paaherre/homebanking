@@ -9,6 +9,10 @@ const app = Vue.createApp({
             showData: false,
             accType: "",
 
+            /* Delete Account */
+            isDeleteAcc: false,
+            deletingAccount: "",
+
             /* Loans*/
             accounts: "",
             loans: "",
@@ -16,7 +20,6 @@ const app = Vue.createApp({
             loanName: "",
             loanAmount: 5000,
             loanPayment: "",
-
             isLoansModal: false,
         }
 
@@ -34,6 +37,8 @@ const app = Vue.createApp({
             })
     },
     methods: {
+
+        /* Accounts */
         createAccount() {
             if (this.accType == "") {
                 return swal('Select account type')
@@ -43,7 +48,9 @@ const app = Vue.createApp({
         },
         deleteAccount(account) {
             if (account.balance != 0) {
-                return swal('Account Balance must be $ 0.00')
+                this.isDeleteAcc = true
+                this.deletingAccount = account
+                return
             }
             swal({
                 title: "Are you sure?",
@@ -63,10 +70,15 @@ const app = Vue.createApp({
                     }
                 });
         },
+
+        /* Formats & Order */
         formatDate(date) {
             return new Date(date).toLocaleDateString('en-gb');
         },
         formatBalance(balance) {
+            if (balance == null) {
+                return
+            }
             let amount = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
@@ -80,6 +92,33 @@ const app = Vue.createApp({
                 return "Checking Account"
             }
         },
+        arraySorted(array) {
+            if (this.client != "") {
+                return array.sort((a, b) => a.id - b.id)
+            }
+        },
+        maxRange() {
+            if (this.loanName != "") {
+                return this.loans.filter(e => e.name == this.loanName)[0].maxAmount
+            }
+
+        },
+        paymentsByLoan() {
+            if (this.loanName != "") {
+                return this.loans.filter(e => e.name == this.loanName)[0].payments
+            }
+        },
+
+        /* Resets */
+        resetValues() {
+            this.loanAccount = ""
+            this.loanAmount = 5000
+            this.loanPayment = ""
+        },
+        resetForm() {
+            this.resetValues()
+            this.loanName = ""
+        },
         aplication() {
             axios.post('/api/loans', { account: this.loanAccount, name: this.loanName, amount: this.loanAmount, payment: this.loanPayment })
                 .then(res => swal(res.data))
@@ -88,44 +127,50 @@ const app = Vue.createApp({
             this.resetValues()
             this.loanName = ""
         },
-        maxRange() {
-            if (this.loanName != "") {
-                return this.loans.filter(e => e.name == this.loanName)[0].maxAmount
-            }
 
-        },
-        resetValues() {
-            this.loanAccount = ""
-            this.loanAmount = 5000
-            this.loanPayment = ""
-        },
-        paymentsByLoan() {
-            if (this.loanName != "") {
-                return this.loans.filter(e => e.name == this.loanName)[0].payments
-            }
-        },
-        resetForm() {
-            this.resetValues()
-            this.loanName = ""
-        },
+        /* Loans */
         aplicationConfirm() {
             if (this.loanAccount == "" || this.loanName == "" || this.loanAmount == 0 || this.loanPayment == "") {
                 return true
             }
             return false
         },
+        currentBalance() {
+            if (this.loanAccount != "") {
+                return this.accounts.filter(e => e.number == this.loanAccount)[0].balance
+            }
+        },
+        loanFees() {
+            if (this.loanPayment == "" || this.loanAmount == "") {
+                return
+            }
+            if (this.loanName == "Hipotecario") {
+                return this.loanPayment + " Fees  of " + this.formatBalance((this.loanAmount * 1.20) / this.loanPayment)
+            }
+            if (this.loanName == "Automotriz") {
+                return this.loanPayment + " Fees  of " + this.formatBalance((this.loanAmount * 1.25) / this.loanPayment)
+            }
+            if (this.loanName == "Personal") {
+                return this.loanPayment + " Fees  of " + this.formatBalance((this.loanAmount * 1.30) / this.loanPayment)
+            }
+        },
+
         logout() {
             axios.post('/api/logout')
                 .then(() => window.location.href = "/index.html")
         },
-        arraySorted(array) {
-            if (this.client != "") {
-                return array.sort((a, b) => a.id - b.id)
-            }
-        },
         transfer() {
             window.location.href = "./loan-aplication.html"
         },
+        toTransferSection(account) {
+            window.location.href = "./transfer.html?transferAcc=" + account;
+        },
+        toTransactionSection(account) {
+            window.location.href = "./transfer.html?transactionAcc=" + account + "#transaction"
+        },
+        toDeleteTransfer() {
+            window.location.href = "./transfer.html?delAcc=" + this.deletingAccount.number + "?" + this.deletingAccount.balance
+        }
     },
     computed: {
 

@@ -10,6 +10,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -17,6 +19,9 @@
 
     <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <!-- Local CSS -->
     <link rel="stylesheet" href="./css/style.css">
@@ -29,10 +34,34 @@
 
 <body>
     <div id="app">
-        <header class="d-flex justify-content-between">
-            <img src="./img/logo-bank.png" class="mx-5" alt="">
-            <h1>JD HomeBanking</h1>
-            <div class="mx-5 align-self-center">
+        <header class="d-flex justify-content-evenly">
+            <a href="./accounts.html"><img src="./img/logo-bank.png" class="" alt=""></a>
+            <h1>JD Banking</h1>
+            <div class="burguer-menu-wrap">
+                <div class="burguer-menu" @click="isMenu = !isMenu">
+                    <span class="line1" :class="isMenu ? '': 'left-forty-five'"></span>
+                    <span class="line2" :class="isMenu ? '': 'right-forty-five'"></span>
+                    <span class="line3" :class="isMenu ? '': 'hidden'"></span>
+                </div>
+                <div class="burguer-menu-tooltip" :class="isMenu ? '':'hidden'">
+                    <span>
+                        <a href="./index.html">Home</a>
+                    </span>
+                    <span>
+                        <a href="./accounts.html">Accounts</a>
+                    </span>
+                    <span>
+                        <a href="./cards.html">Cards</a>
+                    </span>
+                    <span>
+                        <a href="./transfer.html">Transfers</a>
+                    </span>
+                    <span>
+                        <a href="#" @click="logout">LogOut</a>
+                    </span>
+                </div>
+            </div>
+            <div class="menu d-flex justify-content-between align-self-center">
                 <a href="./index.html">Home</a>
                 <a href="./accounts.html">Accounts</a>
                 <a href="./cards.html">Cards</a>
@@ -40,86 +69,162 @@
                 <a href="#" @click="logout">LogOut</a>
             </div>
         </header>
-        <div>
-            <form action="" @submit.prevent="transfer" @reset.prevent="resetTransfer">
-                <div class="d-flex flex-row justify-content-center">
-                    <div class="d-flex flex-column my-5 mx-2 labelColumn">
-                        <label class="my-1" for="reciever">Destinatario: </label>
-                        <label class="my-1" for="fromAccount">Cuenta Origen</label>
-                        <label class="my-1" for="toAccount">Cuenta Destino</label>
-                        <label class="my-1" for="transferAmount">Ingrese Monto: </label>
-                        <label class="my-1" for="transferAmount">Motivo de transferencia: </label>
-                    </div>
-                    <div class="d-flex flex-column my-5 mx-2 inputColumn">
-                        <select class="my-1" name="reciever" id="reciever" v-model="isOwner" @change="resetAcc">
-                            <option value="none" selected>Cuenta Destino</option>
-                            <option :value="true">Propia</option>
-                            <option :value="false">De tercero</option>
-                        </select>
-                        <select class="my-1" name="fromAccount" id="fromAccount" v-model="fromAccount">
-                            <option v-for="acc in client.accounts" :value="acc.number">
-                                {{acc.number}}</option>
-                        </select>
-                        <select v-show="isOwner == true" class="my-1" name="toAccount" v-model="toAccount">
-                            <option v-for="acc in availableAcc()" :value="acc.number" :disabled="disabledToAcc(acc)">
-                                {{acc.number}}</option>
-                        </select>
-                        <div v-show="isOwner == false" class="my-1">
-                            <input type="text" name="toAccount" maxlength="11" size="11" v-model="toAccount">
-                        </div>
-                        <div v-show="isOwner == 'none'" class="my-1">
-                            <input type="number" name="transferAmount" maxlength="11" size="11" v-model="transferAmount"
-                                placeholder="Seleccione Destinatario" disabled>
-                        </div>
-                        <div class="my-1">
-                            <input type="number" name="transferAmount" id="transferAmount" maxlength="4" size="11"
-                                v-model="transferAmount">
-                        </div>
-                        <div class="my-1">
-                            <input type="text" name="transferDesc" id="transferDesc" maxlength="20" size="20"
-                                v-model="transferDesc">
-                        </div>
-                    </div>
-                    <div class="infoColumn">
-                        <div class="my-5 mx-2 availableAmount">
-                            <p>Saldo disponibe para transferir:</p>
-                            <p>{{availableAmount}}</p>
-                        </div>
+        <main>
+            <div class="bg-cover">
+                <section id="transfer" class="transfer d-flex flex-column">
+                    <h2>New Transfer: </h2>
+                    <form action="" @submit.prevent="transfer" @reset.prevent="resetTransfer"
+                        class="animate__animated animate__zoomIn">
+                        <div class="d-flex flex-row justify-content-center">
+                            <div class="d-flex flex-column mt-4 mx-2 labelColumn">
+                                <label class="my-1" for="reciever">Account Owner: </label>
+                                <label class="my-1" for="fromAccount">From Account: </label>
+                                <label class="my-1" for="toAccount">To Account: </label>
+                                <label class="my-1" for="transferAmount">Transfer Amount: </label>
+                                <label class="my-1" for="transferAmount">Description: </label>
+                            </div>
+                            <div class="d-flex flex-column mt-4 mx-2 inputColumn">
+                                <select class="my-1" name="reciever" id="reciever" v-model="isOwner" @change="resetAcc">
+                                    <option value="" selected disabled>- Select -</option>
+                                    <option value="own">Own</option>
+                                    <option value="third">Third Party</option>
+                                </select>
+                                <select class="my-1" name="fromAccount" id="fromAccount" v-model="fromAccount">
+                                    <option v-for="acc in client.accounts" :value="acc.number">
+                                        {{acc.number}}</option>
+                                </select>
+                                <select v-show="isOwner === 'own'" class="my-1" name="toAccount" v-model="toAccount">
+                                    <option v-for="acc in availableAcc()" :value="acc.number"
+                                        :disabled="disabledToAcc(acc)">
+                                        {{acc.number}}</option>
+                                </select>
+                                <div v-show="isOwner === 'third'" class="my-1">
+                                    <input type="text" name="toAccount" maxlength="11" size="11" v-model="toAccount">
+                                </div>
+                                <div v-show="isOwner === ''" class="my-1">
+                                    <input type="number" name="toAccount" maxlength="11" size="11" v-model="toAccount"
+                                        placeholder="Seleccione Destinatario" disabled>
+                                </div>
+                                <div class="my-1">
+                                    <input type="number" name="transferAmount" id="transferAmount" maxlength="4"
+                                        size="11" v-model="transferAmount">
+                                </div>
+                                <div class="my-1">
+                                    <input type="text" name="transferDesc" id="transferDesc" maxlength="20" size="20"
+                                        v-model="transferDesc">
+                                </div>
+                            </div>
 
+                        </div>
+                        <div class="d-flex justify-content-between p-3">
+                            <button class="btn btn-danger" type="reset" id="reset">Cancelar</button>
+                            <button class="btn btn-success" type="submit" data-bs-toggle="modal"
+                                data-bs-target="#transferModal" :disabled="transferData">
+                                Confirmar
+                            </button>
+                        </div>
+                    </form>
+                </section>
+                <section id="transaction" class="d-flex flex-column justify-content-center transaction">
+                    <h2>Review your transactions: </h2>
+                    <div class="d-flex gap-4 justify-content-center flex-wrap transDates">
+                        <div class="d-flex flex-column">
+                            <label for="accountNumber">Select Account: </label>
+                            <select name="accountNumber" v-model="transAccount">
+                                <option value="" selected disabled>- Select -</option>
+                                <option v-for="account in client.accounts" :value="account.number">{{account.number}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <label for="fromDate">From Date: </label>
+                            <input type="date" name="fromDate" v-model="fromDate">
+                        </div>
+                        <div class="d-flex flex-column">
+                            <label for="toDate">To Date: </label>
+                            <input type="date" name="toDate" v-model="toDate">
+                        </div>
+                        <button @click="getTransactions"><i class="fas fa-search"></i></button>
+                        <button @click="getTransactionsToPDF"><i class="far fa-file-pdf"></i></button>
                     </div>
-                </div>
-                <button type="submit" data-bs-toggle="modal" data-bs-target="#transferModal" :disabled="transferData">
-                    Confirmar
-                </button>
-                <button type="reset" id="reset">Cancelar</button>
-            </form>
-        </div>
+                    <div class="containerLoans mt-5">
+                        <ul class="responsive-table">
+                            <li class="table-header animate__animated animate__zoomInUp">
+                                <div class="col col-1">Date: </div>
+                                <div class="col col-2">Description: </div>
+                                <div class="col col-3">Amount: </div>
+                                <div class="col col-3">Balance: </div>
+                            </li>
+                            <li v-if="transactions != ''" v-for="transaction in transArraySorted()"
+                                class="table-row animate__animated animate__zoomInUp">
+                                <div class="col col-1" data-label="Date">
+                                    {{transactionDate(transaction.transactionDate)}}</div>
+                                <div class="col col-2" data-label="Description">{{transaction.description}}</div>
+                                <div class="col col-3" data-label="Amount"
+                                    :class="transaction.type == 'DEBITO' ? 'text-danger' : 'text-success'">
+                                    {{formatBalance(transaction.amount)}}</div>
+                                <div class="col col-4" data-label="Balance">{{formatBalance(transaction.balance)}}</div>
+                            </li>
+                            <li v-else class="table-row animate__animated animate__zoomInUp">
+                                <div class="col col-5 " data-label="New Loan">
+                                    <strong> - Filter by Account and Dates - </strong>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
 
-
-        <!-- Modal -->
-        <div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Confirmación de Transferencia</h5>
-                        <button type="button" class="btn-close" @click="resetTransfer" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <h6>Cuenta Origen: <span>{{fromAccount}}</span></h6>
-                        <h6>Cuenta Destino: <span>{{toAccount}}</span></h6>
-                        <h6>Importe a transferir: <span>{{transferAmount}}</span></h6>
-                        <h6>Motivo de transferencia: <span>{{transferDesc}}</span></h6>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-                            @click="resetTransfer">Cancel</button>
-                        <button type="button" class="btn btn-success" @click="transferPost"
-                            data-bs-dismiss="modal">Confirmar</button>
+                <!-- Transfer Modal -->
+                <div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Confirmación de Transferencia</h5>
+                                <button type="button" class="btn-close" @click="resetTransfer" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h6>Cuenta Origen: <span>{{fromAccount}}</span></h6>
+                                <h6>Cuenta Destino: <span>{{toAccount}}</span></h6>
+                                <h6>Importe a transferir: <span>{{transferAmount}}</span></h6>
+                                <h6>Motivo de transferencia: <span>{{transferDesc}}</span></h6>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                                    @click="resetTransfer">Cancel</button>
+                                <button type="button" class="btn btn-success" @click="transferPost"
+                                    data-bs-dismiss="modal">Confirmar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
+        <footer>
+            <div class="siteMap rsAccess">
+                <ul>
+                    <li><a href="#accounts">Accounts</a></li>
+                    <li><a href="cards.html">Cards</a></li>
+                    <li><a href="transfer.html">Transfers</a></li>
+                    <li><a href="#" @click="logout">Logout</a></li>
+                </ul>
+                <ul>
+                    <li><a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i>
+                            Facebook</a></li>
+                    <li><a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i>
+                            Instagram</a></li>
+                    <li><a href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter-square"></i>
+                            Twitter</a></li>
+                </ul>
+            </div>
+            <div class="copy">
+                <ul>
+                    <li>&copy; Pablo Herrera 2021</li>
+                    <li><a href="mailto:paaherre@gmail.com">paaherre@gmail.com</a></li>
+                </ul>
+            </div>
+        </footer>
     </div>
 
 
