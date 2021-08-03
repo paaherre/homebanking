@@ -13,7 +13,11 @@ const app = Vue.createApp({
     methods: {
         login() {
             axios.post('/api/login', "email=" + this.email + "&password=" + this.password, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
-                .then(() => window.location.href = "/accounts.html")
+                .then(() => {
+                    if (this.email == "admin@admin.com") {
+                        window.location.href = "/admin.html"
+                    } else window.location.href = "/accounts.html"
+                })
                 .catch(() => swal('Wrong mail or password'))
         },
         register() {

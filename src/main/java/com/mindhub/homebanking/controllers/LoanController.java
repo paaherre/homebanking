@@ -2,6 +2,7 @@ package com.mindhub.homebanking.controllers;
 
 
 import com.mindhub.homebanking.dtos.AccountDTO;
+import com.mindhub.homebanking.dtos.CreateLoanDTO;
 import com.mindhub.homebanking.dtos.LoanAplicationDTO;
 import com.mindhub.homebanking.dtos.LoanDTO;
 import com.mindhub.homebanking.models.*;
@@ -64,7 +65,7 @@ public class LoanController {
         transactionRepository.save(new Transaction(loanAplicationDTO.getAmount(), LocalDateTime.now(),  "Préstamo - " + loan.getName(), account, TransactionType.CREDITO));
         account.setBalance(account.getBalance() + loanAplicationDTO.getAmount());
         accountRepository.save(account);
-        return new ResponseEntity<>("Préstamo acreditado en la cuenta", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Account balance updated", HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/loans")
@@ -73,12 +74,12 @@ public class LoanController {
     }
 
     @PostMapping("/admin/loan")
-    public ResponseEntity<?> createLoan(Authentication authentication, @RequestBody LoanDTO loanDTO){
-        if (loanDTO.getInterest() == 0 || loanDTO.getMaxAmount() == 0 || loanDTO.getName().isEmpty() || loanDTO.getPayments().isEmpty()){
-            return new ResponseEntity<>("Datos necesarios incompletos", HttpStatus.FORBIDDEN);
+    public ResponseEntity<?> createLoan(Authentication authentication, @RequestBody CreateLoanDTO createLoanDTO){
+        if (createLoanDTO.getInterest() == 0 || createLoanDTO.getMaxAmount() == 0 || createLoanDTO.getName().isEmpty() || createLoanDTO.getPayments().isEmpty()){
+            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
         }
-        loanRepository.save(new Loan(loanDTO.getName(), loanDTO.getMaxAmount(), loanDTO.getPayments(),loanDTO.getInterest()));
-        return new ResponseEntity<>("Prestamo creado correctamente", HttpStatus.CREATED);
+        loanRepository.save(new Loan(createLoanDTO.getName(), createLoanDTO.getMaxAmount(), createLoanDTO.getPayments(),createLoanDTO.getInterest()));
+        return new ResponseEntity<>("New Loan Added", HttpStatus.CREATED);
     }
 }
 // LoanApplicationDTO - nro Cuenta - idLoan - amount - payment

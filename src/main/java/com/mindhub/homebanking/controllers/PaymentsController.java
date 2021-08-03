@@ -71,7 +71,9 @@ public class PaymentsController {
         .then(response => console.log('Success:', response));
 
         */
-
+    if(paymentDTO.getDescription().isEmpty() || paymentDTO.getAmount() < 1 ||paymentDTO.getCvv() == 0 || paymentDTO.getName().isEmpty() || paymentDTO.getNumber().isEmpty() || paymentDTO.getThruDate() == null){
+        return new ResponseEntity<>("Datos incorrectos", HttpStatus.FORBIDDEN);
+    }
         Card card = cardRepository.findByNumber(paymentDTO.getNumber());
         if(card == null){
             return new ResponseEntity<>("No se encontró tarjeta", HttpStatus.FORBIDDEN);
@@ -84,7 +86,7 @@ public class PaymentsController {
         if(paymentDTO.getThruDate().compareTo(LocalDate.now()) <= 0){
             return new ResponseEntity<>("Datos incorrectos - Vencimiento", HttpStatus.FORBIDDEN);
         }
-        if(!card.getCardHolder().equals(paymentDTO.getName())){
+        if(!card.getCardHolder().equalsIgnoreCase(paymentDTO.getName())){
             return new ResponseEntity<>("Datos incorrectos - Nombre", HttpStatus.FORBIDDEN);
         }
         if(card.getCvv() != paymentDTO.getCvv()){
@@ -95,7 +97,7 @@ public class PaymentsController {
         Account account = accounts.stream().filter(a -> a.getBalance() >= paymentDTO.getAmount()).findFirst().get();
 
         if(account.getNumber() == null){
-            new ResponseEntity<>("Saldo insuficiente", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Saldo insuficiente", HttpStatus.FORBIDDEN);
         }
 
         transactionRepository.save(new Transaction(- paymentDTO.getAmount(), LocalDateTime.now(),  "Pago - " + paymentDTO.getDescription(), account, TransactionType.DEBITO));

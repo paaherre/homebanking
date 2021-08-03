@@ -19,7 +19,7 @@ body{
 }
 main .bg-cover{   
     padding: 20px 40px;
-    min-height: 90vh;
+    min-height: 70vh;
     background-color: rgba(8, 121, 166, 0.45);
 } 
 /* Welcome*/
