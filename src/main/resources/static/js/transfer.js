@@ -6,12 +6,14 @@ const app = Vue.createApp({
             isOwner: "",
             fromAccount: "",
             toAccount: "",
+            destinationAccount: "",
             transferAmount: "",
             transferDesc: "",
             transAccount: "",
             fromDate: "",
             toDate: "",
             transactions: "",
+
         }
     },
     created() {
@@ -25,13 +27,13 @@ const app = Vue.createApp({
         let accDelete = params.get("delAcc")
 
         if (transferAccount != null) {
-            console.log("transfer")
             this.isOwner = 'own'
             this.fromAccount = transferAccount
         }
         if (transactionAccount != null) {
-            console.log("transac")
             this.transAccount = transactionAccount
+            this.transactionFilter()
+            this.getTransactions()
         }
         if (accDelete != null) {
             this.fromAccount = accDelete.split("?")[0]
@@ -46,9 +48,6 @@ const app = Vue.createApp({
         logout() {
             axios.post('/api/logout')
                 .then(() => window.location.href = "/index.html")
-        },
-        transfer() {
-
         },
         disabledFromAcc(a) {
             if (a.number == this.toAccount) {
@@ -67,24 +66,41 @@ const app = Vue.createApp({
                 return this.client.accounts.filter(e => e.number != this.fromAccount)
             }
         },
+        resetToAccount() {
+            this.toAccount = ""
+            this.destinationAccount = "";
+        },
         resetAcc() {
             this.fromAccount = ""
             this.toAccount = ""
             this.transferAmount = ""
             this.transferDesc = ""
+            this.destinationAccount = ""
         },
         resetTransfer() {
             this.isOwner = ""
             this.resetAcc()
+
+        },
+        transferValidation() {
+            axios.post("/api/transfer/validation", "toNumber=" + this.toAccount, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
+                .then(res => this.destinationAccount = res.data)
+                .catch(err => console.log(err))
         },
         transferPost() {
             axios.post('/api/transfer', "amount=" + this.transferAmount + "&description=" + this.transferDesc + "&fromNumber=" + this.fromAccount + "&toNumber=" + this.toAccount, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
-                .then(() => swal('Transferencia exitosa'))
-                .catch(err => swal('No se pudo procesar la transferencia ' + err))
+                .then(res => swal(res.data))
+                .catch(err => swal(err.response.data))
             this.resetTransfer()
         },
         transactionDate(date) {
             return new Date(date).toLocaleDateString('en-gb');
+        },
+        transactionFilter() {
+            let date = new Date(Date.now())
+            date.setDate(date.getDate() - 3)
+            this.fromDate = date.toLocaleDateString('en-gb').split("/").reverse().join("-")
+            this.getTransactions()
         },
         getTransactions() {
             if (this.fromDate == "" || this.transAccount == "") {
@@ -162,6 +178,15 @@ const app = Vue.createApp({
                 return true
             }
             return false
+        },
+        balanceFromAccount() {
+            if (this.fromAccount == "") {
+                return
+            }
+            return this.client.accounts.filter(a => a.number == this.fromAccount)[0].balance
+        },
+        afterBalance() {
+            return this.balanceFromAccount - this.transferAmount
         }
     }
 })

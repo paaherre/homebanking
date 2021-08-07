@@ -76,8 +76,8 @@
                                 <div class="my-1">
                                     <input type="number" name="payments" placeholder="Payments" v-model="payment">
                                     <div>
-                                        <button class="btn btn-success" @click.prevent="addPayment">Add</button>
-                                        <button class="btn btn-danger" @click.prevent="payments = []">Clear</button>
+                                        <button class="btn btn-warning" @click.prevent="payments = []">Clear</button>
+                                        <button class="btn btn-primary" @click.prevent="addPayment">Add</button>
                                     </div>
                                 </div>
                                 <div class="inputPayments" v-if="payments.length >  0" v-for="p in paymentsSorted">

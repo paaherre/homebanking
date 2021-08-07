@@ -45,7 +45,7 @@
                 </div>
                 <div class="burguer-menu-tooltip" :class="isMenu ? '':'hidden'">
                     <span>
-                        <a href="./index.html">Home</a>
+                        <a href="./accounts.html">Home</a>
                     </span>
                     <span>
                         <a href="./accounts.html">Accounts</a>
@@ -62,7 +62,7 @@
                 </div>
             </div>
             <div class="menu d-flex justify-content-between align-self-center">
-                <a href="./index.html">Home</a>
+                <a href="./accounts.html">Home</a>
                 <a href="./accounts.html">Accounts</a>
                 <a href="./cards.html">Cards</a>
                 <a href="./transfer.html">Transfers</a>
@@ -71,27 +71,29 @@
         </header>
         <main>
             <div class="bg-cover">
+                <!-- Transfer Section -->
                 <section id="transfer" class="transfer d-flex flex-column">
                     <h2>New Transfer: </h2>
-                    <form action="" @submit.prevent="transfer" @reset.prevent="resetTransfer"
+                    <form action="" @submit.prevent="transferValidation" @reset.prevent="resetTransfer"
                         class="animate__animated animate__zoomIn">
                         <div class="d-flex flex-row justify-content-center">
                             <div class="d-flex flex-column mt-4 mx-2 labelColumn">
-                                <label class="my-1" for="reciever">Account Owner: </label>
                                 <label class="my-1" for="fromAccount">From Account: </label>
+                                <label class="my-1" for="reciever">Destination Account: </label>
                                 <label class="my-1" for="toAccount">To Account: </label>
                                 <label class="my-1" for="transferAmount">Transfer Amount: </label>
                                 <label class="my-1" for="transferAmount">Description: </label>
                             </div>
                             <div class="d-flex flex-column mt-4 mx-2 inputColumn">
-                                <select class="my-1" name="reciever" id="reciever" v-model="isOwner" @change="resetAcc">
-                                    <option value="" selected disabled>- Select -</option>
-                                    <option value="own">Own</option>
-                                    <option value="third">Third Party</option>
-                                </select>
                                 <select class="my-1" name="fromAccount" id="fromAccount" v-model="fromAccount">
                                     <option v-for="acc in client.accounts" :value="acc.number">
                                         {{acc.number}}</option>
+                                </select>
+                                <select class="my-1" name="reciever" id="reciever" v-model="isOwner"
+                                    @change="resetToAccount">
+                                    <option value="" selected disabled>- Select -</option>
+                                    <option value="own">Own</option>
+                                    <option value="third">Third Party</option>
                                 </select>
                                 <select v-show="isOwner === 'own'" class="my-1" name="toAccount" v-model="toAccount">
                                     <option v-for="acc in availableAcc()" :value="acc.number"
@@ -125,12 +127,13 @@
                         </div>
                     </form>
                 </section>
+                <!-- Transaction Section -->
                 <section id="transaction" class="d-flex flex-column justify-content-center transaction">
                     <h2>Review your transactions: </h2>
                     <div class="d-flex gap-4 justify-content-center flex-wrap transDates">
                         <div class="d-flex flex-column">
                             <label for="accountNumber">Select Account: </label>
-                            <select name="accountNumber" v-model="transAccount">
+                            <select name="accountNumber" v-model="transAccount" @change="transactionFilter">
                                 <option value="" selected disabled>- Select -</option>
                                 <option v-for="account in client.accounts" :value="account.number">{{account.number}}
                                 </option>
@@ -173,28 +176,36 @@
                         </ul>
                     </div>
                 </section>
-
                 <!-- Transfer Modal -->
                 <div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Confirmación de Transferencia</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Tranfer confirmation</h5>
                                 <button type="button" class="btn-close" @click="resetTransfer" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
-                                <h6>Cuenta Origen: <span>{{fromAccount}}</span></h6>
-                                <h6>Cuenta Destino: <span>{{toAccount}}</span></h6>
-                                <h6>Importe a transferir: <span>{{transferAmount}}</span></h6>
-                                <h6>Motivo de transferencia: <span>{{transferDesc}}</span></h6>
+                            <div class="modal-body d-flex flex-direction-column justify-content-evenly">
+                                <div>
+                                    <h6>Origin Account: <span>{{fromAccount}}</span></h6>
+                                    <h6>Destination Account: <span>{{toAccount}}</span></h6>
+                                    <h6>Transfer Amount: <span>{{formatBalance(transferAmount)}}</span></h6>
+                                    <h6>Description: <span>{{transferDesc}}</span></h6>
+                                </div>
+                                <div>
+                                    <h6>Current Balance: {{formatBalance(balanceFromAccount)}}</h6>
+                                    <h6>Transfer Amount: {{formatBalance(transferAmount)}}</h6>
+                                    <h6>After Balance: {{formatBalance(afterBalance)}}</h6>
+                                    <h6>Destination: {{destinationAccount}}</h6>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                                     @click="resetTransfer">Cancel</button>
                                 <button type="button" class="btn btn-success" @click="transferPost"
-                                    data-bs-dismiss="modal">Confirmar</button>
+                                    data-bs-dismiss="modal"
+                                    :disabled="afterBalance < 0 || destinationAccount == ''">Confirm</button>
                             </div>
                         </div>
                     </div>

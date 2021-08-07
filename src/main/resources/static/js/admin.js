@@ -36,10 +36,10 @@ const app = Vue.createApp({
         },
         newLoan() {
             axios.post("/api/admin/loan", { name: this.loanName, maxAmount: parseInt(this.maxAmount), payments: this.payments, interest: parseInt(this.interest) })
-                .then(res => swal(res))
-                .catch(err => swal(err))
+                .then(() => swal('Loan created succefully'))
+                .then(() => this.reset)
+                .catch(() => swal('Incorrect data'))
         },
-
     },
 
 

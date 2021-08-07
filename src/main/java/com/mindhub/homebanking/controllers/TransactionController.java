@@ -44,6 +44,18 @@ public class TransactionController {
     @Autowired
     TransactionRepository transactionRepository;
 
+    @Transactional
+    @PostMapping("/transfer/validation")
+    public ResponseEntity<?> transferValidation(
+            Authentication authentication, @RequestParam String toNumber
+    ) {
+        Account toAccount = accountRepository.findByNumber(toNumber);
+
+        if (toAccount == null){
+            return new ResponseEntity<>("Account not found", HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(toAccount.getClient().getFirstName() + " " + toAccount.getClient().getLastName(), HttpStatus.ACCEPTED);
+    }
 
     @Transactional
     @PostMapping("/transfer")
@@ -102,6 +114,7 @@ public class TransactionController {
 
         return new ResponseEntity<>("Se realizó la transferencia de manera exitosa", HttpStatus.ACCEPTED);
     }
+
 
     @PostMapping ("/transactions")
     public ResponseEntity <?> ListTransactionDTO(Authentication authentication, @RequestBody TransactionFilterDTO transactionFilterDTO){

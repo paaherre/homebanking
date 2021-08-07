@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.mindhub'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '16'
+sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
@@ -20,11 +20,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	runtimeOnly 'com.h2database:h2' // se comenta cuadno pasó a SQL
+	//runtimeOnly 'com.h2database:h2' // se comenta cuadno pasó a SQL
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
-	//implementation 'org.postgresql:postgresql' // Se agrega el SQL
+	implementation 'org.postgresql:postgresql' // Se agrega el SQL
 
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml' //Para agregar formato XML
 
