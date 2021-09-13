@@ -31,7 +31,7 @@ In this section, you've to fill the form, by choosing a transfer between your ow
 
 Last but not least, there's a section to review all your previous transactions!:
 
-![Transaction](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/transaction.png?raw=true)
+![Transaction](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/Transaction.png?raw=true)
 
 Here you can see all the transactios that you have made. Just pick the dates and the account number, and by default, the backEnd will bring up the last 3 days of information but you can select the dates manually.
 In addition,  you can download a PDF with the requested information!  Generated guess where... yes, on java!. (thanks openPDF and IText libraries):
