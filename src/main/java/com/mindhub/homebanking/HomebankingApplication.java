@@ -27,7 +27,7 @@ public class HomebankingApplication {
 	public CommandLineRunner initData(CardRepository cardRepository, ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository) {
 		return (args) -> {
 
-/*
+
 
 			Client client1 = clientRepository.save(new Client("Melba", "Morel", "melba@mindhub.com", passwordEncoder.encode("Password1")));
 			Client client2 = clientRepository.save(new Client("Pablo", "Herrera", "paaherre@gmail.com", passwordEncoder.encode("Password2")));
@@ -82,7 +82,7 @@ public class HomebankingApplication {
 			cardRepository.save(new Card(client1, "2234-6745-5522-7888", 750, LocalDate.now(), LocalDate.now().plusYears(5), CardType.CREDITO, CardColor.SILVER));
 			cardRepository.save(new Card(client2, "4546-5169-7821-5597", 154, LocalDate.now(), LocalDate.now().plusYears(5), CardType.CREDITO, CardColor.TITANIUM));
 
-*/
+
 
 		};
 	}
