@@ -27,7 +27,7 @@ After choosing the card type and color, Data and information are generated in th
 Additionally, we have a transfer section, where you can operate with safety and comfort:
 ![Transfer](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/transfer.png?raw=true)
 
-In this section, you've to fill the form, by choosing a transfer between your own accounts, or a thrid-party account.
+In this section, you have to fill the form, by choosing a transfer between your own accounts, or a thrid-party account.
 
 Last but not least, there's a section to review all your previous transactions!:
 
