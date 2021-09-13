@@ -39,7 +39,7 @@ Here you can see all the transactios that you have made in with your accounts, t
 
 ***
 
-In order to make your own test in my bank, here you go 2 accounts:
+In order to improve your visit, here you go 2 accounts to make some tests:
 
 Client
 user: melba@mindhub.com
