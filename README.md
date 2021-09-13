@@ -16,7 +16,7 @@ Registering as new user also creates a new account:
 Welcome to Java-Data Bank!!
 Thanks for joining the team, now you can see the account information, delete or create new accounts (you must choose between checking accounts or savings accounts)
 
-First, get some cash by aplying to our pre-aproved loans, selecting the option in the account card or the option in the loans details on the bottom, then just complete the form.
+First, get some cash by applying to our pre-approved loans, selecting the option in the account card or the option in the loans details on the bottom, then just complete the form.
 
 There are a few operations you can make with your new account, like creating a new card (either Credit or Debit) in the card section:
 
