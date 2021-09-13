@@ -7,33 +7,34 @@
 
 This is a FullStack Project with back end on Java 11 SpringBoot Framework 2.4.4 and Vue Template as frontEnd.
 
-Register as new user also creates a new account:
+Registering as new user also creates a new account:
 
 ![Register](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/register.png?raw=true)
 
 ![Accounts](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/accounts.png?raw=true)
 
 Welcome to Java-Data Bank!!
-Thanks for join the team, now you can see the account data, delete accounts or create new accounts (must choose between checking accounts or savings accounts)
+Thanks for joining the team, now you can see the account data, delete accounts or create new accounts (must choose between checking accounts or savings accounts)
 
-First, get some cash aplying to our pre-aproved loans, selecting the option in the account card or the option in the loans details on the bottom, then just complete the form.
+First, get some cash by aplying to our pre-aproved loans, selecting the option in the account card or the option in the loans details on the bottom, then just complete the form.
 
-There is a few operations you can make with your new account, like create a new Credit or Debit Card in the Cards Section:
+There are a few operations you can make with your new account, like creating a new card (either Credit or Debit) in the card section:
 
 ![Cards](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/cards.png?raw=true)
 
-Cards Data is generated in backEnd where you must choose between Credit or Debit Card and the card Color. A random sequence of 16 numbers, your account information, expiration date (5 years since created) and a random CVV 3 digit number is asigned to identify.
+After choosing the card type and color, Data and information are generated in the backEnd. A random 16 digits sequence as an unique identifier, expiration date (5 years since creation) and random CVV, are asigned to the new card.
 
-Also we got a transfer section to make your transferences safety and comfortable:
+Additionally, we have a transfer section, where you can operate with safety and comfort::
 ![Transfer](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/transfer.png?raw=true)
 
-In this section you can fill the form to make a new transaction it can be between your own accounts or a third party account (you can create a new account or client).
+In this section, you've to fill the form, by choosing a transfer between your own accounts, or a thrid-party account.
 
-For the most important banks like us, you must have a section to review all your transactions:
+Last but not least, there's a section to review all your previous transactions!:
 
 ![Transaction](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/transaction.png?raw=true)
 
-Here you can see all the transactios that you have made in with your accounts, the filter works in backend just sending the dates and account number, by default when you select the account it fills the past 3 days and retrieve the information, also you can download a PDF extraction generated guess where... yes, on java!. (thanks openPDF and IText library):
+Here you can see all the transactios that you have made. Just pick the dates and the account number, and by default, the backEnd will bring up the last 3 days of information but you can select the dates manually.
+In addition,  you can download a PDF with the requested information!  Generated guess where... yes, on java!. (thanks openPDF and IText libraries):
 
 ![PDF](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/pdf.png?raw=true)
 
@@ -41,11 +42,11 @@ Here you can see all the transactios that you have made in with your accounts, t
 
 In order to improve your visit, here you go 2 accounts to make some tests:
 
-Client
+Client:
 user: melba@mindhub.com
 password: Password1
 
-Admin
+Admin:
 user: admin@admin.com
 password: admin
 
@@ -53,4 +54,4 @@ The admin only works to create a new type of loans, selecting the name, max amou
 
 I hope you enjoy my project.
 
-Thanks for your time.
+Thanks for your time!.
