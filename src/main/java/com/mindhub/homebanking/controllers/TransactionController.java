@@ -136,7 +136,6 @@ public class TransactionController {
         return new ResponseEntity<>(transactionDTOList1, HttpStatus.ACCEPTED);
     }
 
-
     @PostMapping ("/transaction/export/pdf")
     public void exportToPDF(HttpServletResponse response, Authentication authentication, @RequestBody TransactionFilterDTO transactionFilterDTO) throws DocumentException, IOException {
 

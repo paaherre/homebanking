@@ -6,7 +6,6 @@ public class LoanAplicationDTO {
     private double amount;
     private int payment;
 
-
     public LoanAplicationDTO() {
     }
 
@@ -15,9 +14,7 @@ public class LoanAplicationDTO {
         this.name = name;
         this.amount = amount;
         this.payment = payment;
-
     }
-
 
     public String getAccount() {
         return account;

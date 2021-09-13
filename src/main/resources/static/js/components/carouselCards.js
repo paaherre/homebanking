@@ -1,17 +1,17 @@
-app.component('cards-carousel', {
-    props: {
-        cards: {
-            type: Array,
-            required: true
-        },
-        type: {
-            type: String,
-            required: true,
-        }
+app.component("cards-carousel", {
+  props: {
+    cards: {
+      type: Array,
+      required: true,
     },
-    template:
-        /*html*/
-        `        
+    type: {
+      type: String,
+      required: true,
+    },
+  },
+  template:
+    /*html*/    
+      `
         <div class="cardsContainerFlex">
             <div v-for="(card, i) in cardsRender(cards)"
             :key="i"
@@ -60,42 +60,42 @@ app.component('cards-carousel', {
         </div>
         `,
 
-    data() {
-        return {
-            activeItem: 0,
+  data() {
+    return {
+      activeItem: 0,
+    };
+  },
+  methods: {
+    cardsRender() {
+      let card = [];
+      for (i = 0; i < 3; i++) {
+        if (this.cards[i] == null) {
+          card[i] = null;
+        } else {
+          card[i] = this.cards[i];
         }
+      }
+      return card;
     },
-    methods: {
-        cardsRender() {
-            let card = []
-            for (i = 0; i < 3; i++) {
-                if (this.cards[i] == null) {
-                    card[i] = null
-                } else {
-                    card[i] = this.cards[i]
-                }
-            }
-            return card
-        },
-        selectItem(i) {
-            this.activeItem = i
-        },
-        cardColor(color) {
-            return color.toLowerCase()
-        },
-        expiredCard(date) {
-            let dateNow = Date(Date.now())
-            let expirationDate = new Date(date).toDateString
-            return expirationDate < dateNow
-        },
-        expires(date) {
-            return date.split("").splice(2, 5).join("");
-        },
-        deleteCard(card) {
-            this.$emit('delete-card', card)
-        },
-        newCard() {
-            this.$emit('new-card', this.type)
-        }
-    }
-})
+    selectItem(i) {
+      this.activeItem = i;
+    },
+    cardColor(color) {
+      return color.toLowerCase();
+    },
+    expiredCard(date) {
+      let dateNow = Date(Date.now());
+      let expirationDate = new Date(date).toDateString;
+      return expirationDate < dateNow;
+    },
+    expires(date) {
+      return date.split("").splice(2, 5).join("");
+    },
+    deleteCard(card) {
+      this.$emit("delete-card", card);
+    },
+    newCard() {
+      this.$emit("new-card", this.type);
+    },
+  },
+});
