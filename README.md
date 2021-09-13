@@ -40,7 +40,7 @@ In addition,  you can download a PDF with the requested information!  Generated 
 
 ***
 
-In order to improve your visit, here you go 2 accounts to make some tests:
+In order to improve your visit, here you have 2 accounts to make some tests:
 
 Client:
 user: melba@mindhub.com
