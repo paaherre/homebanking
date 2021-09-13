@@ -24,7 +24,7 @@ There are a few operations you can make with your new account, like creating a n
 
 After choosing the card type and color, Data and information are generated in the backEnd. A random 16 digits sequence as an unique identifier, expiration date (5 years since creation) and random CVV, are asigned to the new card.
 
-Additionally, we have a transfer section, where you can operate with safety and comfort::
+Additionally, we have a transfer section, where you can operate with safety and comfort:
 ![Transfer](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/transfer.png?raw=true)
 
 In this section, you've to fill the form, by choosing a transfer between your own accounts, or a thrid-party account.
