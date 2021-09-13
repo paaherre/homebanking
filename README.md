@@ -14,7 +14,7 @@ Registering as new user also creates a new account:
 ![Accounts](https://github.com/paaherre/homebanking/blob/main/src/main/resources/static/img/readme/accounts.png?raw=true)
 
 Welcome to Java-Data Bank!!
-Thanks for joining the team, now you can see the account data, delete accounts or create new accounts (must choose between checking accounts or savings accounts)
+Thanks for joining the team, now you can see the account information, delete or create new accounts (you must choose between checking accounts or savings accounts)
 
 First, get some cash by aplying to our pre-aproved loans, selecting the option in the account card or the option in the loans details on the bottom, then just complete the form.
 
